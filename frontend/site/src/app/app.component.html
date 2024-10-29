@@ -1,10 +1,13 @@
 <nav>
   <ul>
     <li>
-      <button (click)="isSignUpVisible = true">sign in</button>
+      <button *ngIf="areSignButtonsVisible" (click)="isSignUpVisible = true">sign in</button>
     </li>
     <li>
-      <button>sign up</button>
+      <button *ngIf="areSignButtonsVisible" (click)="isSignUpVisible = true">sign up</button>
+    </li>
+    <li>
+      <button>my profile</button>
     </li>
   </ul>
 </nav>

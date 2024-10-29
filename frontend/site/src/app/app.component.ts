@@ -13,8 +13,16 @@ import { CommonModule } from '@angular/common';
 export class AppComponent {
   title = 'site';
   isSignUpVisible: boolean;
+  areSignButtonsVisible: boolean;
+  isUserLogged: boolean;
 
   constructor() {
     this.isSignUpVisible = false;
+    this.areSignButtonsVisible = true;
+    this.isUserLogged = false;
+  }
+
+  hideSignButtons() {
+    this.areSignButtonsVisible = false;
   }
 }
