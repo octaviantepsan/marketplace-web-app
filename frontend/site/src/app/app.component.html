@@ -7,9 +7,12 @@
       <button *ngIf="areSignButtonsVisible" (click)="isSignUpVisible = true">sign up</button>
     </li>
     <li>
+      <button *ngIf="isUserLogged" (click)="signOut()">sign out</button>
+    </li>
+    <li>
       <button>my profile</button>
     </li>
   </ul>
 </nav>
 
-<app-signin *ngIf="isSignUpVisible"></app-signin>
+<app-signin (signStatus)="isSignedIn($event)" *ngIf="isSignUpVisible"></app-signin>

@@ -22,7 +22,14 @@ export class AppComponent {
     this.isUserLogged = false;
   }
 
-  hideSignButtons() {
+  isSignedIn($event: boolean) {
     this.areSignButtonsVisible = false;
+    this.isUserLogged = true;
+    this.isSignUpVisible = false;
+  }
+
+  signOut() {
+    this.isUserLogged = false;
+    this.areSignButtonsVisible = true;
   }
 }
