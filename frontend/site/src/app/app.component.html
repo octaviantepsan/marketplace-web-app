@@ -1,18 +1,18 @@
 <nav>
   <ul>
     <li>
-      <button *ngIf="areSignButtonsVisible" (click)="isSignUpVisible = true">sign in</button>
+      <button class="beautiful-button" *ngIf="showReturnBtn" (click)="onReturn()">Return</button>
     </li>
     <li>
-      <button *ngIf="areSignButtonsVisible" (click)="isSignUpVisible = true">sign up</button>
+      <button class="beautiful-button" *ngIf="showSignInBtn" (click)="onSignIn()">Sign In</button>
     </li>
     <li>
-      <button *ngIf="isUserLogged" (click)="signOut()">sign out</button>
+      <button class="beautiful-button" *ngIf="showSignOutBtn" (click)="onSignOut()">Sign Out</button>
     </li>
     <li>
-      <button>my profile</button>
+      <button class="beautiful-button" *ngIf="isUserAuth">My Profile</button>
     </li>
   </ul>
 </nav>
 
-<app-signin (signStatus)="isSignedIn($event)" *ngIf="isSignUpVisible"></app-signin>
+<app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage"></app-signin>

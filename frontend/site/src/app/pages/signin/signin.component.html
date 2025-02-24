@@ -1,49 +1,37 @@
-<div style=" height: 700px; width: 1860px;">
-    
-
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <div style="background-color:green; float: left; height: 700px; width: 700px;">
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <span style="margin-top: 100px;">If you wish to login</span>
-
-                <div>
-                    <form style="margin-top: 300px; text-align: center;">
-                        <label for="fname">First name:</label>
-                        <input type="text" id="fname" name="fname"><br><br>
-                        <label for="lname">Last name:</label>
-                        <input type="text" id="lname" name="lname"><br><br>
-                      </form>
-                    <!--inputs-->
-                </div>
-
-                <div>
-                    <button (click)="signedIn()">Login</button>
-                </div>
+<div class="sign-in-body">
+    <div class="flex-body">
+        <div style="display: block">
+            <div style="margin-top: 100px; text-align: center; font-size: 24px;">Sign In</div>
+            <div style="margin-top: 30px;">
+                <!--inputs-->
+                <form style="text-align: center;">
+                    <label for="fname">First name:&nbsp;</label>
+                    <input type="text" id="fname" name="fname"><br><br>
+                    <label for="lname">Last name:&nbsp;</label>
+                    <input type="text" id="lname" name="lname"><br><br>
+                    <button class="beautiful-button" (click)="authenticate($event)">Login</button>
+                </form>
             </div>
         </div>
-        <div style="background-color:rgb(211, 137, 0); float: right; height: 700px; width: 700px;">
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <span style="margin-top: 100px;">If you wish to register</span>
-
-                <div>
-                    <!--inputs-->
-                    <form style="margin-top: 300px; text-align: center;">
-                        <label for="fname">First name:</label>
-                        <input type="text" id="fname" name="fname"><br><br>
-                        <label for="lname">Last name:</label>
-                        <input type="text" id="lname" name="lname"><br><br>
-                        <label for="adress">Adress:</label>
-                        <input type="text" id="adress" name="adress"><br><br>
-                        <label for="city">City:</label>
-                        <input type="text" id="city" name="city"><br><br>
+        <div style="display: block">
+            <div style="margin-top: 100px; text-align: center; font-size: 24px;">Register</div>
+            <div style="margin-top: 30px;">
+                <!--inputs-->
+                <form style="text-align: center;">
+                    <label for="fname">First name:&nbsp;</label>
+                    <input type="text" id="fname" name="fname"><br><br>
+                    <label for="lname">Last name:&nbsp;</label>
+                    <input type="text" id="lname" name="lname"><br><br>
+                    <label for="adress">Adress:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" id="adress" name="adress"><br><br>
+                    <label for="city">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" id="city" name="city"><br><br>
+                    <div>
                         <input type="checkbox" id="vendor">
-                        <label for="vendor">Become vendor</label>
-                      </form>
-                </div>
-
-                <div>
-                    <button (click)="signedIn()">Register</button>
-                </div>
+                        <label for="vendor">&nbsp;I want to be a vendor</label>
+                    </div>
+                    <button class="beautiful-button" style="margin-top: 10px;" (click)="register()">Register</button>
+                </form>
             </div>
         </div>
     </div>
