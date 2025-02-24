@@ -1,0 +1,9 @@
+.sign-in-body {
+    color: var(--text-color);
+}
+
+.flex-body {
+    display: flex; 
+    justify-content: space-evenly; 
+    background: #fff;
+}

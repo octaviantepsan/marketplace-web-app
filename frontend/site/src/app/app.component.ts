@@ -12,24 +12,44 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'site';
-  isSignUpVisible: boolean;
-  areSignButtonsVisible: boolean;
-  isUserLogged: boolean;
+  showSignInBtn: boolean;
+  showSignOutBtn: boolean;
+  showSignInPage: boolean;
+  isUserAuth: boolean;
+  showReturnBtn: boolean;
 
   constructor() {
-    this.isSignUpVisible = false;
-    this.areSignButtonsVisible = true;
-    this.isUserLogged = false;
+    this.showSignInBtn = true;
+    this.showSignOutBtn = false;
+    this.showSignInPage = false;
+    this.isUserAuth = false;
+    this.showReturnBtn = false;
   }
 
-  isSignedIn($event: boolean) {
-    this.areSignButtonsVisible = false;
-    this.isUserLogged = true;
-    this.isSignUpVisible = false;
+  onSignIn() {
+    this.showSignInBtn = false;
+    this.showSignInPage = true;
+    this.showReturnBtn = true;
   }
 
-  signOut() {
-    this.isUserLogged = false;
-    this.areSignButtonsVisible = true;
+  onSignOut() {
+    this.isUserAuth = false;
+    this.showSignOutBtn = false;
+    this.showSignInBtn = true;
   }
+
+  onReturn() {
+    this.showSignInPage = false;
+    this.showSignInBtn = true;
+    this.showReturnBtn = false;
+  }
+
+  captureAuthResponse($event: boolean) {
+    this.showSignInBtn = false;
+    this.showSignOutBtn = true;
+    this.isUserAuth = true;
+    this.showReturnBtn = false;
+    this.showSignInPage = false;
+  }
+  
 }

@@ -1,0 +1,23 @@
+nav, nav > ul, nav > ul > li {
+    overflow: hidden;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+
+nav {
+    padding-right: 12px;
+}
+
+nav > ul {
+    float: right;
+    display: block;
+}
+
+nav > ul > li {
+    float: right;
+    display: block;
+    color: var(--text-color);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
