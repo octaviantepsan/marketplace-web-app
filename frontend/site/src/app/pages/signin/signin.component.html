@@ -1,38 +1,53 @@
 <div class="sign-in-body">
-    <div class="flex-body">
-        <div style="display: block">
-            <div style="margin-top: 100px; text-align: center; font-size: 24px;">Sign In</div>
-            <div style="margin-top: 30px;">
+    <div class="flex-body" style="padding-top: 30px;">
+        <div class="form-wrapper" style="display: block">
+            <div style="margin-top: 20px; text-align: center; font-size: 24px;">Sign In</div>
+            <div style="margin-top: 30px; padding: 0 10px 0 10px;">
                 <!--inputs-->
-                <form style="text-align: center;">
+                <form #loginForm="ngForm" style="text-align: center;">
                     <label for="fname">First name:&nbsp;</label>
-                    <input type="text" id="fname" name="fname"><br><br>
+                    <input ngModel type="text" id="fname" name="fname" required><br><br>
                     <label for="lname">Last name:&nbsp;</label>
-                    <input type="text" id="lname" name="lname"><br><br>
-                    <button class="beautiful-button" (click)="authenticate($event)">Login</button>
+                    <input ngModel type="text" id="lname" name="lname" required><br><br>
+                    <button class="beautiful-button" (click)="authenticate($event, loginForm)">Login</button>
                 </form>
             </div>
         </div>
-        <div style="display: block">
-            <div style="margin-top: 100px; text-align: center; font-size: 24px;">Register</div>
-            <div style="margin-top: 30px;">
+        <div class="form-wrapper" style="display: block">
+            <div style="margin-top: 20px; text-align: center; font-size: 24px;">Register</div>
+            <div style="margin-top: 30px; padding: 0 10px 0 10px;">
                 <!--inputs-->
-                <form style="text-align: center;">
+                <form #registerForm="ngForm" style="text-align: center;">
                     <label for="fname">First name:&nbsp;</label>
-                    <input type="text" id="fname" name="fname"><br><br>
+                    <input ngModel type="text" id="fname" name="fname" required><br><br>
                     <label for="lname">Last name:&nbsp;</label>
-                    <input type="text" id="lname" name="lname"><br><br>
+                    <input ngModel type="text" id="lname" name="lname" required><br><br>
                     <label for="adress">Adress:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input type="text" id="adress" name="adress"><br><br>
+                    <input ngModel type="text" id="adress" name="adress" required><br><br>
                     <label for="city">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input type="text" id="city" name="city"><br><br>
+                    <input ngModel type="text" id="city" name="city" required><br><br>
                     <div>
-                        <input type="checkbox" id="vendor">
-                        <label for="vendor">&nbsp;I want to be a vendor</label>
+                        <input style="cursor: pointer;" ngModel type="checkbox" id="vendor" name="vendor">
+                        <label style="cursor: pointer;" for="vendor">&nbsp;I want to be a vendor</label>
                     </div>
-                    <button class="beautiful-button" style="margin-top: 10px;" (click)="register()">Register</button>
+                    <button class="beautiful-button" style="margin-top: 10px; margin-bottom: 10px;" (click)="register($event, registerForm)">Register</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="notificationWrapper">
+        <div class="notificationSucces" *ngIf="showRegisterSuccesNotif">
+            <span style="font-size: 20px;"><br>Register succesful. <br><br></span>
+            <span style="font-size: 17px;">You will be automatically logged in soon</span>
+        </div>
+        <div class="notificationWarning" *ngIf="showRegisterWarningNotif">
+            <span style="font-size: 20px;"><br>Something went wrong. <br><br></span>
+            <span style="font-size: 17px;">Register failed. Please make sure your data is right.</span>
+        </div>
+        <div class="notificationWarning" *ngIf="showLoginWarningNotif">
+            <span style="font-size: 20px;"><br>Something went wrong. <br><br></span>
+            <span style="font-size: 17px;">Login failed. Please make sure your data is right.</span>
         </div>
     </div>
 </div>
