@@ -12,7 +12,21 @@
     <li>
       <button class="beautiful-button" *ngIf="isUserAuth">My Profile</button>
     </li>
+    <!-- To delete later -->
+    <li>
+      <button class="beautiful-button" (click)="testGetRequest()">Test GET Request</button>
+    </li>
+    <li>
+      <button class="beautiful-button" (click)="testPostRequest()">Test POST Request</button>
+    </li>
+    <!-- To delete later end -->
   </ul>
 </nav>
+
+<!-- To delete later -->
+<div id="requestResults" style="min-width: 400px; min-height: 300px; background-color: #000; color: #fff; display: table;">
+  <span>{{ requestResults | json }}</span>
+</div>
+<!-- To delete later end -->
 
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage"></app-signin>
