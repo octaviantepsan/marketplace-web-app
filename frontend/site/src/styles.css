@@ -31,6 +31,16 @@ body {
     font-size: 14px;
 }
 
+.beautiful-button.floating {
+    background-color: transparent;
+    color: #2c2c2c;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.beautiful-button.floating:hover {
+    background-color: transparent;
+}
+
 .beautiful-button:hover {
     background-color: #0a79a5;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);

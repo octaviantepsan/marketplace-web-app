@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
         </div>
         <div class="actions">
             <button class="beautiful-button small">Make Offer</button>
-            <button class="beautiful-button small">View Product</button>
+            <button class="beautiful-button small floating">View Product</button>
         </div>
     </div>`
 })
