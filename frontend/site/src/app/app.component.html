@@ -20,6 +20,6 @@
   <button class="beautiful-button">Search</button>
 </div>
 
-<app-carousel *ngIf="showCarousel"></app-carousel>
-<app-products-page></app-products-page>
+<app-carousel *ngIf="showHomepageElements"></app-carousel>
+<app-products-page *ngIf="showHomepageElements"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage"></app-signin>

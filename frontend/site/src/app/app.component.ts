@@ -19,7 +19,7 @@ export class AppComponent {
   showSignInPage: boolean;
   isUserAuth: boolean;
   showReturnBtn: boolean;
-  showCarousel: boolean;
+  showHomepageElements: boolean;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -27,28 +27,28 @@ export class AppComponent {
     this.showSignInPage = false;
     this.isUserAuth = false;
     this.showReturnBtn = false;
-    this.showCarousel = true;
+    this.showHomepageElements = true;
   }
 
   onSignIn() {
     this.showSignInBtn = false;
     this.showSignInPage = true;
     this.showReturnBtn = true;
-    this.showCarousel = false;
+    this.showHomepageElements = false;
   }
 
   onSignOut() {
     this.isUserAuth = false;
     this.showSignOutBtn = false;
     this.showSignInBtn = true;
-    this.showCarousel = true;
+    this.showHomepageElements = true;
   }
 
   onReturn() {
     this.showSignInPage = false;
     this.showSignInBtn = true;
     this.showReturnBtn = false;
-    this.showCarousel = true;
+    this.showHomepageElements = true;
   }
 
   captureAuthResponse($event: boolean) {
@@ -57,7 +57,7 @@ export class AppComponent {
     this.isUserAuth = true;
     this.showReturnBtn = false;
     this.showSignInPage = false;
-    this.showCarousel = true;
+    this.showHomepageElements = true;
   }
 
   testGetRequest() {
