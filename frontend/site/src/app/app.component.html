@@ -12,21 +12,14 @@
     <li>
       <button class="beautiful-button" *ngIf="isUserAuth">My Profile</button>
     </li>
-    <!-- To delete later -->
-    <li>
-      <button class="beautiful-button" (click)="testGetRequest()">Test GET Request</button>
-    </li>
-    <li>
-      <button class="beautiful-button" (click)="testPostRequest()">Test POST Request</button>
-    </li>
-    <!-- To delete later end -->
   </ul>
 </nav>
 
-<!-- To delete later -->
-<div id="requestResults" style="min-width: 400px; min-height: 300px; background-color: #000; color: #fff; display: table;">
-  <span>{{ requestResults | json }}</span>
+<div class="global-search">
+  <input type="text" class="search-input" placeholder="Search across all products...">
+  <button class="beautiful-button">Search</button>
 </div>
-<!-- To delete later end -->
 
+<app-carousel *ngIf="showHomepageElements"></app-carousel>
+<app-products-page *ngIf="showHomepageElements"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage"></app-signin>

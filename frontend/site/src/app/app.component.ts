@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { SigninComponent } from './pages/signin/signin.component';
 import { CommonModule } from '@angular/common';
 import { AppService } from './services/app.service';
+import { CarouselComponent } from "./pages/carousel/carousel.component";
+import { ProductsPageComponent } from "./pages/productsPage/productsPage.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SigninComponent],
+  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -18,9 +19,7 @@ export class AppComponent {
   showSignInPage: boolean;
   isUserAuth: boolean;
   showReturnBtn: boolean;
-
-  // to delete later
-  requestResults: any;
+  showHomepageElements: boolean;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -28,24 +27,28 @@ export class AppComponent {
     this.showSignInPage = false;
     this.isUserAuth = false;
     this.showReturnBtn = false;
+    this.showHomepageElements = true;
   }
 
   onSignIn() {
     this.showSignInBtn = false;
     this.showSignInPage = true;
     this.showReturnBtn = true;
+    this.showHomepageElements = false;
   }
 
   onSignOut() {
     this.isUserAuth = false;
     this.showSignOutBtn = false;
     this.showSignInBtn = true;
+    this.showHomepageElements = true;
   }
 
   onReturn() {
     this.showSignInPage = false;
     this.showSignInBtn = true;
     this.showReturnBtn = false;
+    this.showHomepageElements = true;
   }
 
   captureAuthResponse($event: boolean) {
@@ -54,14 +57,13 @@ export class AppComponent {
     this.isUserAuth = true;
     this.showReturnBtn = false;
     this.showSignInPage = false;
+    this.showHomepageElements = true;
   }
 
   testGetRequest() {
-    let context = this;
     this.appService.getUsers().subscribe({
       next(data: any) {
         console.log(data);
-        context.requestResults = data;
       },
       error(err) {
         // status number-ul trebuie sa coincida cu cel pe care il returnezi in BE pe error ca sa tratezi eroarea
@@ -73,7 +75,6 @@ export class AppComponent {
   }
 
   testPostRequest() {
-    let context = this;
     let body = {
       lastName: "Test",
       firstName: "Test",
@@ -83,7 +84,6 @@ export class AppComponent {
     this.appService.postUser(body).subscribe({
       next(data) {
         console.log(data.message);
-        context.requestResults = data.message;
       },
       error(err) {
         // 400 adica 'Bad Request' punem de obicei cand datele de transmis sunt transmise incorect. Adica body-ul a avut structura proasta. De obicei validam asta in BE.
