@@ -25,8 +25,6 @@ export class SigninComponent {
 
   authenticate($event: any, loginForm: NgForm) {
     console.log(loginForm.form.value);
-    // din cauza ca este singurul buton din cadrul unui <form> tag, va fi considerat ca [type="submit"] si va face submit la form
-    // ceea ce va cauza un unexpected page refresh (innate browser behaviour), asa ca facem event.preventDefault() ca sa prevenim comportamentul default
 
     if (loginForm.valid === false) {
       this.showLoginWarningNotif = true;
@@ -42,7 +40,7 @@ export class SigninComponent {
   }
 
   registerUser($event: any, registerForm: NgForm) {
-    let body = registerForm.value;
+    let body = registerForm.form.value;  //body devine un Object avand ca atribute input-urile care apartin de registerForm -> fname | lname | adress | city
 
     if (registerForm.valid === false) {
       this.showRegisterNotification($event, false);

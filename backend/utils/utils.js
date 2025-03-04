@@ -82,3 +82,5 @@ function testInsertItem(itemName, itemType, stock, userId) {
         console.log(results);
     });
 }
+
+module.exports = { processUserData };
