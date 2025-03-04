@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AppService } from '../../services/app.service';
 
 @Component({
   selector: 'app-signin',
@@ -12,9 +13,15 @@ import { CommonModule } from '@angular/common';
 export class SigninComponent {
   @Output() authResponse = new EventEmitter<boolean>();
 
-  showRegisterSuccesNotif = false;
-  showRegisterWarningNotif = false;
-  showLoginWarningNotif = false;
+  showRegisterSuccesNotif: boolean;
+  showRegisterWarningNotif: boolean;
+  showLoginWarningNotif: boolean;
+
+  constructor(private appService: AppService) {
+    this.showRegisterSuccesNotif = false;
+    this.showRegisterWarningNotif = false;
+    this.showLoginWarningNotif = false;
+  }
 
   authenticate($event: any, loginForm: NgForm) {
     console.log(loginForm.form.value);
@@ -34,11 +41,30 @@ export class SigninComponent {
     this.authResponse.emit(true);
   }
 
-  register($event: any, registerForm: NgForm) {
-    //console.log(registerForm.form.value);
-    //console.log(registerForm.valid);
+  registerUser($event: any, registerForm: NgForm) {
+    let body = registerForm.value;
 
     if (registerForm.valid === false) {
+      this.showRegisterNotification($event, false);
+    }
+    else {
+      this.appService.registerUser(body).subscribe({
+        next(data) {
+          console.log(data.message);
+        },
+        error(err) {
+          if (err && err['status'] === 400) {
+            console.log(err);
+          }
+        }
+      })
+
+      this.showRegisterNotification($event, true);
+    }
+  }
+
+  showRegisterNotification($event: any, type: boolean) {
+    if (type === false) {
       this.showRegisterWarningNotif = true;
 
       setTimeout(() => {
@@ -48,7 +74,6 @@ export class SigninComponent {
     }
     else {
       this.showRegisterSuccesNotif = true;
-
       setTimeout(() => {
         this.showRegisterSuccesNotif = false;
 

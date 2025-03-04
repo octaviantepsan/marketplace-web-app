@@ -33,4 +33,12 @@ export class AppService {
     };
     return this.http.post(SERVER_API_URL + "/postUser", body, options);
   }
+
+  registerUser(body: any): Observable<any> {
+    const options: HttpRequestOptions = {
+      observe: 'body',
+      responseType: 'json'
+    };
+    return this.http.post(SERVER_API_URL + "/registerUser", body, options);
+  }
 }
