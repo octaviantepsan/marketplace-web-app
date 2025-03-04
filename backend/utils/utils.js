@@ -11,17 +11,13 @@ function queryDb() {
     });
 }
 
-function processUserData(firstName, lastName, city, adress) {
+function isUserDataValid(firstName, lastName, city, adress) {
     let letterOnlyCheck = /^[a-zA-Z]+$/;
-
-    if ((typeof (firstName) != 'string') || (typeof (lastName) != 'string') || (typeof (city) != 'string') || (typeof (adress) != 'string')) {
-        return false;
-    }
 
     if (letterOnlyCheck.test(firstName) && letterOnlyCheck.test(lastName) && letterOnlyCheck.test(city)) {
         return true;
     }
-        
+
     return false;
 }
 
@@ -31,7 +27,7 @@ function deleteUser(userId) {
 }
 
 function testInsertUser(firstName, lastName, city, adress) {
-    if (processUserData(firstName, lastName, city, adress) === false) {
+    if (isUserDataValid(firstName, lastName, city, adress) === false) {
         console.error("Data was processed incorrectly");
         return;
     }
@@ -57,7 +53,7 @@ function processItemData(itemName, itemType, stock = 0) {
     if (letterOnlyCheck.test(itemType) && stock >= 0) {
         return true;
     }
-        
+
     return false;
 }
 
@@ -83,4 +79,4 @@ function testInsertItem(itemName, itemType, stock, userId) {
     });
 }
 
-module.exports = { processUserData };
+module.exports = { isUserDataValid };

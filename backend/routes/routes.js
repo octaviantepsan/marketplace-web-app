@@ -58,21 +58,20 @@ router.post('/postUser', async (req, res) => {
 
 router.post('/registerUser', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    //console.log("Received POST request to ['/registerUser'] ... ");
+    console.log("Received POST request to ['/registerUser'] ... ");
 
-    try {
-        if (utils.processUserData(req.body.fname, req.body.lname, req.body.city, req.body.adress) === true) {
-            const query = `INSERT INTO Users (LastName, FirstName, City, Address)
+    if (utils.isUserDataValid(req.body.fname, req.body.lname, req.body.city, req.body.adress) === true) {
+        const query = `INSERT INTO Users (LastName, FirstName, City, Address)
                            VALUES ('${req.body.lname}', '${req.body.fname}', '${req.body.city}', '${req.body.adress}')`;    //avem grija ce parametrii folosim in functie de cum arata body
-            db.query(query, (err) => {
-                if (err) {
-                    console.error(err.message);
-                }
-                res.status(200).json({ message: "User has been registered" });
-            });
-        }
+        db.query(query, (err) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ message: err.message });
+            }
+            res.status(200).json({ message: "User has been registered" });
+        });
     }
-    catch (error) {
-        res.status(400).json({ message: error.message })
+    else {
+        res.status(400).json({});
     }
 });

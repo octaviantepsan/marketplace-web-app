@@ -42,26 +42,30 @@ export class SigninComponent {
   registerUser($event: any, registerForm: NgForm) {
     let body = registerForm.form.value;  //body devine un Object avand ca atribute input-urile care apartin de registerForm -> fname | lname | adress | city
 
+    $event.preventDefault();
+
     if (registerForm.valid === false) {
-      this.showRegisterNotification($event, false);
+      this.showRegisterNotification(false);
     }
     else {
+      let outerContext = this;
+
       this.appService.registerUser(body).subscribe({
         next(data) {
           console.log(data.message);
+          alert("ok");
+          outerContext.authResponse.emit(true);
         },
         error(err) {
-          if (err && err['status'] === 400) {
-            console.log(err);
+          if (err) {
+            outerContext.showRegisterNotification(false);
           }
         }
       })
-
-      this.showRegisterNotification($event, true);
     }
   }
 
-  showRegisterNotification($event: any, type: boolean) {
+  showRegisterNotification(type: boolean) {
     if (type === false) {
       this.showRegisterWarningNotif = true;
 
@@ -74,9 +78,6 @@ export class SigninComponent {
       this.showRegisterSuccesNotif = true;
       setTimeout(() => {
         this.showRegisterSuccesNotif = false;
-
-        $event.preventDefault();
-        this.authResponse.emit(true);
       }, 4000);
     }
   }
