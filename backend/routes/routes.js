@@ -75,3 +75,25 @@ router.post('/registerUser', async (req, res) => {
         res.status(400).json({});
     }
 });
+
+router.post('/loginUser', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/loginUser'] ... ");
+
+    const query = `SELECT * FROM Users WHERE FirstName = ? AND LastName = ?`;
+    const values = [req.body.fname, req.body.lname];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json({ message: "User exists", user: results[0] });
+        }
+        else {
+            res.status(400).json({ message: "User not found" });
+        }
+    });
+});

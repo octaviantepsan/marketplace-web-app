@@ -53,6 +53,37 @@ export class SigninComponent {
       this.appService.registerUser(body).subscribe({
         next(data) {
           console.log(data.message);
+          console.log(typeof (data));
+          console.log(data);
+          alert("ok");
+          outerContext.authResponse.emit(true);
+        },
+        error(err) {
+          if (err) {
+            outerContext.showRegisterNotification(false);
+          }
+        }
+      })
+    }
+  }
+
+  loginUser($event: any, loginForm: NgForm) {
+    let body = loginForm.form.value;  //body devine un Object avand ca atribute input-urile care apartin de registerForm -> fname | lname | adress | city
+
+    $event.preventDefault();
+
+    if (loginForm.valid === false) {
+      this.showRegisterNotification(false);
+    }
+    else {
+      let outerContext = this;
+
+      this.appService.loginUser(body).subscribe({
+        next(data) {
+          console.log(data.message);
+          
+          
+          
           alert("ok");
           outerContext.authResponse.emit(true);
         },
