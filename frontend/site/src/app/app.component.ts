@@ -20,6 +20,7 @@ export class AppComponent {
   isUserAuth: boolean;
   showReturnBtn: boolean;
   showHomepageElements: boolean;
+  connectedUserId: any = null;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -51,13 +52,14 @@ export class AppComponent {
     this.showHomepageElements = true;
   }
 
-  captureAuthResponse($event: boolean) {
+  captureAuthResponse($event: Object) {
     this.showSignInBtn = false;
     this.showSignOutBtn = true;
     this.isUserAuth = true;
     this.showReturnBtn = false;
     this.showSignInPage = false;
     this.showHomepageElements = true;
+    this.connectedUserId = $event;
   }
 
   testGetRequest() {

@@ -11,7 +11,7 @@ import { AppService } from '../../services/app.service';
   styleUrl: './signin.component.css'
 })
 export class SigninComponent {
-  @Output() authResponse = new EventEmitter<boolean>();
+  @Output() authResponse = new EventEmitter<Object>();
 
   showRegisterSuccesNotif: boolean;
   showRegisterWarningNotif: boolean;
@@ -53,10 +53,14 @@ export class SigninComponent {
       this.appService.registerUser(body).subscribe({
         next(data) {
           console.log(data.message);
-          console.log(typeof (data));
-          console.log(data);
+
+          let authResponseData = {
+            isSucces: true,
+            userId: data.userId
+          };
+
           alert("ok");
-          outerContext.authResponse.emit(true);
+          outerContext.authResponse.emit(authResponseData);
         },
         error(err) {
           if (err) {
@@ -82,10 +86,13 @@ export class SigninComponent {
         next(data) {
           console.log(data.message);
           
-          
+          let authResponseData = {
+            isSucces: true,
+            userId: data.userId
+          };
           
           alert("ok");
-          outerContext.authResponse.emit(true);
+          outerContext.authResponse.emit(authResponseData);
         },
         error(err) {
           if (err) {

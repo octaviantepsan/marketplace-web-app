@@ -62,13 +62,16 @@ router.post('/registerUser', async (req, res) => {
 
     if (utils.isUserDataValid(req.body.fname, req.body.lname, req.body.city, req.body.adress) === true) {
         const query = `INSERT INTO Users (LastName, FirstName, City, Address)
-                           VALUES ('${req.body.lname}', '${req.body.fname}', '${req.body.city}', '${req.body.adress}')`;    //avem grija ce parametrii folosim in functie de cum arata body
-        db.query(query, (err) => {
+                       VALUES (?, ?, ?, ?)`;
+        const values = [req.body.lname, req.body.fname, req.body.city, req.body.adress];
+
+        db.query(query, values, (err, results) => {
             if (err) {
                 console.error(err.message);
                 res.status(500).json({ message: err.message });
             }
-            res.status(200).json({ message: "User has been registered" });
+            newUserId = results.insertId
+            res.status(200).json({ userId: newUserId });
         });
     }
     else {
@@ -90,7 +93,7 @@ router.post('/loginUser', async (req, res) => {
         }
 
         if (results.length > 0) {
-            res.status(200).json({ message: "User exists", user: results[0] });
+            res.status(200).json({ userId: results[0].UserId });
         }
         else {
             res.status(400).json({ message: "User not found" });
