@@ -5,10 +5,10 @@
             <div style="margin-top: 30px; padding: 0 10px 0 10px;">
                 <!--inputs-->
                 <form #loginForm="ngForm" style="text-align: center;">
-                    <label for="fname">First name:&nbsp;</label>
-                    <input ngModel type="text" id="fname" name="fname" required><br><br>
-                    <label for="lname">Last name:&nbsp;</label>
-                    <input ngModel type="text" id="lname" name="lname" required><br><br>
+                    <label for="email">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input ngModel type="email" id="email" name="email" required><br><br>
+                    <label for="passw">Password:&nbsp;&nbsp;</label>
+                    <input ngModel type="password" id="passw" name="passw" required><br><br>
                     <button class="beautiful-button" (click)="loginUser($event, loginForm)">Login</button>
                 </form>
             </div>
@@ -18,13 +18,17 @@
             <div style="margin-top: 30px; padding: 0 10px 0 10px;">
                 <!--inputs-->
                 <form #registerForm="ngForm" style="text-align: center;">
+                    <label for="email">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input ngModel type="email" id="email" name="email" required><br><br>
+                    <label for="passw">Password:&nbsp;&nbsp;</label>
+                    <input ngModel type="password" id="passw" name="passw" required><br><br>
                     <label for="fname">First name:&nbsp;</label>
                     <input ngModel type="text" id="fname" name="fname" required><br><br>
                     <label for="lname">Last name:&nbsp;</label>
                     <input ngModel type="text" id="lname" name="lname" required><br><br>
-                    <label for="adress">Adress:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <label for="adress">Adress:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input ngModel type="text" id="adress" name="adress" required><br><br>
-                    <label for="city">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <label for="city">City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input ngModel type="text" id="city" name="city" required><br><br>
                     <div>
                         <input style="cursor: pointer;" ngModel type="checkbox" id="vendor" name="vendor">

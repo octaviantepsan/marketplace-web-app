@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../services/app.service';
@@ -21,22 +21,6 @@ export class SigninComponent {
     this.showRegisterSuccesNotif = false;
     this.showRegisterWarningNotif = false;
     this.showLoginWarningNotif = false;
-  }
-
-  authenticate($event: any, loginForm: NgForm) {
-    console.log(loginForm.form.value);
-
-    if (loginForm.valid === false) {
-      this.showLoginWarningNotif = true;
-
-      setTimeout(() => {
-        this.showLoginWarningNotif = false;
-      }, 3000);
-      return
-    }
-
-    $event.preventDefault();
-    this.authResponse.emit(true);
   }
 
   registerUser($event: any, registerForm: NgForm) {
@@ -69,6 +53,7 @@ export class SigninComponent {
         }
       })
     }
+    registerForm.resetForm();
   }
 
   loginUser($event: any, loginForm: NgForm) {
@@ -85,12 +70,12 @@ export class SigninComponent {
       this.appService.loginUser(body).subscribe({
         next(data) {
           console.log(data.message);
-          
+
           let authResponseData = {
             isSucces: true,
             userId: data.userId
           };
-          
+
           alert("ok");
           outerContext.authResponse.emit(authResponseData);
         },

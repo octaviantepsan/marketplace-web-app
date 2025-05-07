@@ -10,7 +10,7 @@
       <button class="beautiful-button" *ngIf="showSignOutBtn" (click)="onSignOut()">Sign Out</button>
     </li>
     <li>
-      <button class="beautiful-button" *ngIf="isUserAuth">My Profile</button>
+      <button class="beautiful-button" *ngIf="isUserAuth" (click)="onUserPanel()">My Profile</button>
     </li>
   </ul>
 </nav>
@@ -22,4 +22,5 @@
 
 <app-carousel *ngIf="showHomepageElements"></app-carousel>
 <app-products-page *ngIf="showHomepageElements"></app-products-page>
-<app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage"></app-signin>
+<app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage" ></app-signin>
+<app-userpanel *ngIf="showUserPanel" [userId]="connectedUserId.userId"></app-userpanel>

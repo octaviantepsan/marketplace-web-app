@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { AppService } from './services/app.service';
 import { CarouselComponent } from "./pages/carousel/carousel.component";
 import { ProductsPageComponent } from "./pages/productsPage/productsPage.component";
+import { UserpanelComponent } from './pages/userpanel/userpanel.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent],
+  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -17,6 +18,7 @@ export class AppComponent {
   showSignInBtn: boolean;
   showSignOutBtn: boolean;
   showSignInPage: boolean;
+  showUserPanel: boolean;
   isUserAuth: boolean;
   showReturnBtn: boolean;
   showHomepageElements: boolean;
@@ -29,6 +31,7 @@ export class AppComponent {
     this.isUserAuth = false;
     this.showReturnBtn = false;
     this.showHomepageElements = true;
+    this.showUserPanel = false;
   }
 
   onSignIn() {
@@ -50,6 +53,17 @@ export class AppComponent {
     this.showSignInBtn = true;
     this.showReturnBtn = false;
     this.showHomepageElements = true;
+    this.showUserPanel = false;
+  }
+
+  onUserPanel() {
+    this.showUserPanel = true;
+    this.showSignInPage = false;
+    this.showReturnBtn = true;
+    this.showHomepageElements = false;
+    this.showSignInBtn = false;
+    this.showSignOutBtn = false;
+    
   }
 
   captureAuthResponse($event: Object) {

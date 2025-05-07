@@ -1,1 +1,18 @@
-<p>userpanel works!</p>
+<div class="add-item-body">
+    <div class="flex-body" style="padding-top: 30px;">
+        <div class="form-wrapper" style="display: block">
+            <div style="margin-top: 20px; text-align: center; font-size: 24px;">Add Item</div>
+            <div style="margin-top: 30px; padding: 0 10px 0 10px;">
+                <form #itemForm="ngForm" style="text-align: center;">
+                    <label for="iname">Item Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input ngModel type="text" id="iname" name="iname" required><br><br>
+                    <label for="itype">Item Type:&nbsp;&nbsp;</label>
+                    <input ngModel type="text" id="itype" name="itype" required><br><br>
+                    <label for="stock">Stock:&nbsp;&nbsp;</label>
+                    <input ngModel type="number" id="stock" name="stock" required><br><br>
+                    <button class="beautiful-button" (click)="addItem($event, itemForm)">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

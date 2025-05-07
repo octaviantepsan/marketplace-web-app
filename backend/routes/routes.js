@@ -60,10 +60,10 @@ router.post('/registerUser', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received POST request to ['/registerUser'] ... ");
 
-    if (utils.isUserDataValid(req.body.fname, req.body.lname, req.body.city, req.body.adress) === true) {
-        const query = `INSERT INTO Users (LastName, FirstName, City, Address)
-                       VALUES (?, ?, ?, ?)`;
-        const values = [req.body.lname, req.body.fname, req.body.city, req.body.adress];
+    if (utils.isUserDataValid(req.body.email, req.body.fname, req.body.lname, req.body.city) === true) {
+        const query = `INSERT INTO Users (Email, Passw, LastName, FirstName, City, Address)
+                       VALUES (?, ?, ?, ?, ?, ?)`;
+        const values = [req.body.email, req.body.passw, req.body.lname, req.body.fname, req.body.city, req.body.adress];
 
         db.query(query, values, (err, results) => {
             if (err) {
@@ -83,8 +83,8 @@ router.post('/loginUser', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received POST request to ['/loginUser'] ... ");
 
-    const query = `SELECT * FROM Users WHERE FirstName = ? AND LastName = ?`;
-    const values = [req.body.fname, req.body.lname];
+    const query = `SELECT * FROM Users WHERE Email = ? AND Passw = ?`;
+    const values = [req.body.email, req.body.passw];
 
     db.query(query, values, (err, results) => {
         if (err) {
@@ -99,4 +99,26 @@ router.post('/loginUser', async (req, res) => {
             res.status(400).json({ message: "User not found" });
         }
     });
+});
+
+router.post('/addItem', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/addItem'] ... ");
+
+    if (utils.processItemData(req.body.iname, req.body.itype, req.body.stock) === true) {
+        const query = `INSERT INTO Items (ItemName, ItemType, Stock, VendorId)
+                       VALUES (?, ?, ?, ?)`;
+        const values = [req.body.iname, req.body.itype, req.body.stock, req.body.userId];
+
+        db.query(query, values, (err, results) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ message: err.message });
+            }
+            res.status(200).json({ message: "added item succesfully" });
+        });
+    }
+    else {
+        res.status(400).json({});
+    }
 });
