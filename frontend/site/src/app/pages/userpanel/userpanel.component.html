@@ -1,18 +1,104 @@
-<div class="add-item-body">
-    <div class="flex-body" style="padding-top: 30px;">
-        <div class="form-wrapper" style="display: block">
-            <div style="margin-top: 20px; text-align: center; font-size: 24px;">Add Item</div>
-            <div style="margin-top: 30px; padding: 0 10px 0 10px;">
-                <form #itemForm="ngForm" style="text-align: center;">
-                    <label for="iname">Item Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input ngModel type="text" id="iname" name="iname" required><br><br>
-                    <label for="itype">Item Type:&nbsp;&nbsp;</label>
-                    <input ngModel type="text" id="itype" name="itype" required><br><br>
-                    <label for="stock">Stock:&nbsp;&nbsp;</label>
-                    <input ngModel type="number" id="stock" name="stock" required><br><br>
-                    <button class="beautiful-button" (click)="addItem($event, itemForm)">Add</button>
-                </form>
+<div class="profile-wrapper" *ngIf="connectedUserData">
+    <div class="profile-container">
+        <div class="actions-wrapper">
+            <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
+                (click)="onShowMyData()">
+                My Data
+            </button>
+            <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
+                (click)="onShowMyItems()" *ngIf="connectedUserData.IsVendor === 1">
+                My Items
+            </button>
+            <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
+                (click)="onShowAddItem()" *ngIf="connectedUserData.IsVendor === 1">
+                Add Item
+            </button>
+        </div>
+
+        <div style="flex-grow: 1; background-color: #ecf0f1; padding: 30px; overflow-y: auto;">
+            <!-- AddItem -->
+            <div class="add-item-body" *ngIf="showAddItem">
+                <div class="flex-body" style="padding-top: 30px;">
+                    <div class="form-wrapper" style="display: block">
+                        <div style="margin-top: 20px; text-align: center; font-size: 24px;">Add Item</div>
+                        <div style="margin-top: 30px; padding: 0 10px 0 10px;">
+                            <form #itemForm="ngForm" style="text-align: center;">
+                                <label for="iname">Item
+                                    Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="text" id="iname" name="iname" required><br><br>
+                                <label for="itype">Item
+                                    Type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="text" id="itype" name="itype" required><br><br>
+                                <label
+                                    for="stock">Stock:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="number" id="stock" name="stock" required><br><br>
+                                <button class="beautiful-button" style="margin-bottom: 10px; margin-top: 10px;"
+                                    (click)="addItem($event, itemForm)">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MyData -->
+            <div class="data-wrapper" *ngIf="showMyData">
+                <div style="text-align: center; margin-bottom: 30px; font-size: 24px">My Account</div>
+
+                <div style="display: flex; flex-direction: column; gap: 3rem;" *ngIf="connectedUserData">
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">Email:</div>
+                        <div>{{ connectedUserData?.Email || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">Password:</div>
+                        <div>{{ connectedUserData?.Passw || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">Last Name:</div>
+                        <div>{{ connectedUserData?.LastName || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">First Name:</div>
+                        <div>{{ connectedUserData?.FirstName || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">City:</div>
+                        <div>{{ connectedUserData?.City || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">Address:</div>
+                        <div>{{ connectedUserData?.Address || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" >
+                        <div style="font-weight: bold;">Date Created:</div>
+                        <div>{{ connectedUserData?.DateCreated | date: 'short' || 'Not Available'}}</div>
+                    </div>
+
+                    <div class="data-container" *ngIf="connectedUserData.IsVendor === 1">
+                        <div style="font-weight: bold;">Rating:</div>
+                        <div>{{ connectedUserData?.Rating || '0'}}</div>
+                    </div>
+
+                    <div class="data-container" *ngIf="connectedUserData.IsVendor == 1">
+                        <div style="font-weight: bold;">Sales:</div>
+                        <div>{{ connectedUserData?.Sales || '0'}}</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- MyItems -->
+            <div>
+
             </div>
         </div>
+
     </div>
 </div>

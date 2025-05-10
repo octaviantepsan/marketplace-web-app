@@ -57,4 +57,8 @@ export class AppService {
     };
     return this.http.post(SERVER_API_URL + "/addItem", body, options);
   }
+
+  getUserData(queryParam: string): Observable<any> {
+    return this.http.get(SERVER_API_URL + "/getUserData", { params: {userId: queryParam} });
+  }
 }

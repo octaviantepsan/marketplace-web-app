@@ -107,10 +107,11 @@ router.post('/addItem', async (req, res) => {
 
     if (utils.processItemData(req.body.iname, req.body.itype, req.body.stock) === true) {
         const query = `INSERT INTO Items (ItemName, ItemType, Stock, VendorId)
-                       VALUES (?, ?, ?, ?)`;
+                       VALUES (?, ?, ?, ?)
+                       ON DUPLICATE KEY UPDATE Stock = Stock + VALUES(Stock)`;
         const values = [req.body.iname, req.body.itype, req.body.stock, req.body.userId];
 
-        db.query(query, values, (err, results) => {
+        db.query(query, values, (err) => {
             if (err) {
                 console.error(err.message);
                 res.status(500).json({ message: err.message });
@@ -121,4 +122,26 @@ router.post('/addItem', async (req, res) => {
     else {
         res.status(400).json({});
     }
+});
+
+router.get('/getUserData', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received GET request to ['/getUsers'] ... ");
+
+    const query = `SELECT * FROM Users WHERE UserId = ?`;
+    const values = [req.query.userId];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results[0]);
+        }
+        else {
+            res.status(400).json({ message: "User not found" });
+        }
+    });
 });

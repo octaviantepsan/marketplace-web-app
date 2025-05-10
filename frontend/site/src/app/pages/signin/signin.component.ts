@@ -69,8 +69,6 @@ export class SigninComponent {
 
       this.appService.loginUser(body).subscribe({
         next(data) {
-          console.log(data.message);
-
           let authResponseData = {
             isSucces: true,
             userId: data.userId

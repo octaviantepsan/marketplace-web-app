@@ -18,11 +18,12 @@ export class AppComponent {
   showSignInBtn: boolean;
   showSignOutBtn: boolean;
   showSignInPage: boolean;
-  showUserPanel: boolean;
+  showUserPanelPage: boolean;
   isUserAuth: boolean;
   showReturnBtn: boolean;
   showHomepageElements: boolean;
   connectedUserId: any = null;
+  showUserPanelBtn: boolean;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -31,7 +32,8 @@ export class AppComponent {
     this.isUserAuth = false;
     this.showReturnBtn = false;
     this.showHomepageElements = true;
-    this.showUserPanel = false;
+    this.showUserPanelPage = false;
+    this.showUserPanelBtn = false;
   }
 
   onSignIn() {
@@ -46,24 +48,35 @@ export class AppComponent {
     this.showSignOutBtn = false;
     this.showSignInBtn = true;
     this.showHomepageElements = true;
+    this.connectedUserId.isSucces = false;
+    this.showReturnBtn = false;
+    this.showUserPanelPage = false;
+    this.showUserPanelBtn = false;
   }
 
   onReturn() {
     this.showSignInPage = false;
-    this.showSignInBtn = true;
+    this.showUserPanelPage = false;
+    if (this.isUserAuth === false) {
+      this.showSignInBtn = true;
+    }
+
+    if(this.isUserAuth === true) {
+      this.showUserPanelBtn = true;
+    }
+
     this.showReturnBtn = false;
     this.showHomepageElements = true;
-    this.showUserPanel = false;
   }
 
   onUserPanel() {
-    this.showUserPanel = true;
+    this.showUserPanelPage = true;
     this.showSignInPage = false;
     this.showReturnBtn = true;
     this.showHomepageElements = false;
     this.showSignInBtn = false;
-    this.showSignOutBtn = false;
-    
+    this.showSignOutBtn = true;
+    this.showUserPanelBtn = false;
   }
 
   captureAuthResponse($event: Object) {
@@ -73,6 +86,7 @@ export class AppComponent {
     this.showReturnBtn = false;
     this.showSignInPage = false;
     this.showHomepageElements = true;
+    this.showUserPanelBtn = true;
     this.connectedUserId = $event;
   }
 
@@ -109,5 +123,5 @@ export class AppComponent {
       }
     })
   }
-  
+
 }
