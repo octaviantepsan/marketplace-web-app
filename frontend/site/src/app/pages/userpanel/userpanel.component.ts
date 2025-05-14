@@ -2,11 +2,12 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../services/app.service';
+import { Product } from '../product/product.component';
 
 @Component({
   selector: 'app-userpanel',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, Product],
   templateUrl: './userpanel.component.html',
   styleUrl: './userpanel.component.css'
 })
@@ -16,15 +17,17 @@ export class UserpanelComponent {
   showMyitems: boolean;
   showAddItem: boolean;
   connectedUserData: any = null;
+  myItems: any[] = [];
+  mode: string;
 
   constructor(private appService: AppService) {
     this.showMyData = true;
     this.showAddItem = false;
     this.showMyitems = false;
+    this.mode = "userPanel";
   }
 
   ngOnInit(): void {
-    // Call the function on component load
     this.getUserData();
   }
 
@@ -59,7 +62,6 @@ export class UserpanelComponent {
       this.appService.addItem(body).subscribe({
         next(data) {
           console.log(data.message);
-
           alert("ok");
         },
         error(err) {
@@ -81,6 +83,23 @@ export class UserpanelComponent {
     this.appService.getUserData(this.userId).subscribe({
       next(data: any) {
         outerContext.connectedUserData = data;
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    })
+  }
+
+  getMyItems() {
+    //$event.preventDefault();  ASK ADI
+
+    let outerContext = this;
+
+    this.appService.getProducts(this.userId).subscribe({
+      next(data: any) {
+        outerContext.myItems = data;
       },
       error(err) {
         if (err && err['status'] === 500) {

@@ -44,11 +44,12 @@ function testInsertUser(firstName, lastName, city, adress) {
     });
 }
 
-function processItemData(itemName, itemType, stock = 0) {
+function processItemData(itemName, Category, stock, price) {
     let letterOnlyCheck = /^[a-zA-Z]+$/;
     let itemNameCheck = /^.*\s+.*$/;
+    let priceValueCheck = /^[1-9][0-9]*$/;
 
-    if (letterOnlyCheck.test(itemType) && itemNameCheck.test(itemName) && stock >= 0) {
+    if (letterOnlyCheck.test(Category) && itemNameCheck.test(itemName) && stock > 0 && priceValueCheck.test(price)) {
         return true;
     }
 
@@ -60,14 +61,14 @@ function deleteItem(itemId) {
     console.log("Item has been deleted.");
 }
 
-function testInsertItem(itemName, itemType, stock, userId) {
-    if (processItemData(itemName, itemType, stock) === false) {
+function testInsertItem(itemName, Category, stock, userId) {
+    if (processItemData(itemName, Category, stock) === false) {
         console.error("Data was processed incorrectly");
         return;
     }
 
-    const query = `INSERT INTO Items (ItemName, ItemType, Stock, UserId)
-                   VALUES ('${itemName}', '${itemType}', '${stock}', ${userId})`;
+    const query = `INSERT INTO Items (ItemName, Category, Stock, UserId)
+                   VALUES ('${itemName}', '${Category}', '${stock}', ${userId})`;
 
     db.query(query, (err, results) => {
         if (err) {

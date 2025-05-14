@@ -6,7 +6,7 @@
                 My Data
             </button>
             <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
-                (click)="onShowMyItems()" *ngIf="connectedUserData.IsVendor === 1">
+                (click)="onShowMyItems(); getMyItems()" *ngIf="connectedUserData.IsVendor === 1">
                 My Items
             </button>
             <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
@@ -23,14 +23,15 @@
                         <div style="margin-top: 20px; text-align: center; font-size: 24px;">Add Item</div>
                         <div style="margin-top: 30px; padding: 0 10px 0 10px;">
                             <form #itemForm="ngForm" style="text-align: center;">
-                                <label for="iname">Item
-                                    Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <label for="iname">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="iname" name="iname" required><br><br>
-                                <label for="itype">Item
-                                    Type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="text" id="itype" name="itype" required><br><br>
+                                <label for="categ">Category:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="text" id="categ" name="categ" required><br><br>
+                                <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="text" id="price" name="price"
+                                    required><br><br>
                                 <label
-                                    for="stock">Stock:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    for="stock">Stock:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="number" id="stock" name="stock" required><br><br>
                                 <button class="beautiful-button" style="margin-bottom: 10px; margin-top: 10px;"
                                     (click)="addItem($event, itemForm)">Add</button>
@@ -45,37 +46,37 @@
                 <div style="text-align: center; margin-bottom: 30px; font-size: 24px">My Account</div>
 
                 <div style="display: flex; flex-direction: column; gap: 3rem;" *ngIf="connectedUserData">
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">Email:</div>
                         <div>{{ connectedUserData?.Email || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">Password:</div>
                         <div>{{ connectedUserData?.Passw || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">Last Name:</div>
                         <div>{{ connectedUserData?.LastName || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">First Name:</div>
                         <div>{{ connectedUserData?.FirstName || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">City:</div>
                         <div>{{ connectedUserData?.City || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">Address:</div>
                         <div>{{ connectedUserData?.Address || 'Not Available'}}</div>
                     </div>
 
-                    <div class="data-container" >
+                    <div class="data-container">
                         <div style="font-weight: bold;">Date Created:</div>
                         <div>{{ connectedUserData?.DateCreated | date: 'short' || 'Not Available'}}</div>
                     </div>
@@ -92,13 +93,13 @@
                 </div>
             </div>
 
-
-
             <!-- MyItems -->
-            <div>
-
+            <div class="myProducts" *ngIf="showMyitems">
+                <div style="text-align: center; margin-bottom: 30px; font-size: 24px">My Items</div>
+                <div class="justified">
+                    <app-product *ngFor="let product of myItems" [item]="product" [view]="mode"></app-product>
+                </div>
             </div>
         </div>
-
     </div>
 </div>

@@ -49,7 +49,7 @@ export class AppService {
     };
     return this.http.post(SERVER_API_URL + "/loginUser", body, options);
   }
-  
+
   addItem(body: any): Observable<any> {
     const options: HttpRequestOptions = {
       observe: 'body',
@@ -59,11 +59,13 @@ export class AppService {
   }
 
   getUserData(queryParam: string): Observable<any> {
-    return this.http.get(SERVER_API_URL + "/getUserData", { params: {userId: queryParam} });
+    return this.http.get(SERVER_API_URL + "/getUserData", { params: { userId: queryParam } });
   }
 
-  getProducts(): Observable<any> {
-    return of(null);
+  getProducts(queryParam?: string): Observable<any> {
+    const options = queryParam ? { params: { userId: queryParam } } : {};
+
+    return this.http.get(SERVER_API_URL + "/getProducts", options);
   }
 
 }

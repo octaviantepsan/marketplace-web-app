@@ -69,7 +69,7 @@ interface FilterOptions {
                 </div>
                 <div class="products">
                     <div class="justified">
-                        <app-product *ngFor="let product of products"></app-product>
+                        <app-product *ngFor="let product of products" [item]="product" [view] = "mode"></app-product>
                     </div>
                 </div>    
             </div>
@@ -135,6 +135,7 @@ export class ProductsPageComponent {
         category: 'all',
     };
     products = [1, 2, 3, 4, 5, 6, 7];
+    mode: string = "productsPage";
 
     constructor(private appService: AppService) { }
 
@@ -159,18 +160,18 @@ export class ProductsPageComponent {
         // fetch products
         this.appService.getProducts().subscribe({
             next(data: any[]) {
-                // uncomment once api request is ready
-                // outerContext.products = data.filter(e => {
-                //     if (e.price >= outerContext.filters['minPrice'] &&
-                //         e.price <= outerContext.filters['maxPrice'] &&
-                //         e.availability === outerContext.filters['availability'] && // change if availability is actually a bool
-                //         e.category === outerContext.filters['category']) {
-                //         return e;
-                //     }
-                // }).sort(outerContext.compareFn);
+                outerContext.products = data.filter(e => {
+                    return e.Price >= outerContext.filters['minPrice'] &&
+                        e.Price <= outerContext.filters['maxPrice'] &&
+                        e.Availability.toLowerCase() === outerContext.filters['availability'].toLowerCase() &&
+                        (outerContext.filters['category'].toLowerCase() === 'all' || 
+                        e.Category.toLowerCase() === outerContext.filters['category'].toLowerCase());
+                }).sort((a, b) => outerContext.compareFn(a, b));
             },
             error(err) {
-                // error handling
+                if (err && err['status'] === 500) {
+                    console.log(err);
+                }
             }
         })
     }
@@ -178,30 +179,20 @@ export class ProductsPageComponent {
     compareFn(a: any, b: any) {
         switch (this.filters.sortBy) {
             case "name_asc":
-                if (a.name < b.name) {
-                    return -1;
-                } else if (a.name > b.name) {
-                    return 1;
-                }
-                return 0;
+                return a.ItemName.localeCompare(b.ItemName);   //similar to a."" < b."" sau a."" > b."" sau a."" == b.""
             case "name_desc":
-                if (a.name > b.name) {
-                    return -1;
-                } else if (a.name < b.name) {
-                    return 1;
-                }
-                return 0;
+                return b.ItemName.localeCompare(a.ItemName);
             case "price_asc":
-                if (a.price < b.price) {
+                if (a.Price < b.Price) {
                     return -1;
-                } else if (a.price > b.price) {
+                } else if (a.Price > b.Price) {
                     return 1;
                 }
                 return 0;
             case "price_desc":
-                if (a.price > b.price) {
+                if (a.Price > b.Price) {
                     return -1;
-                } else if (a.price < b.price) {
+                } else if (a.Price < b.Price) {
                     return 1;
                 }
                 return 0;

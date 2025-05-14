@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,14 +12,20 @@ import { FormsModule } from '@angular/forms';
             <img src="assets/box.png">
         </div>
         <div class="title">
-            <span>New Product</span>
+            <span>{{ item?.ItemName || 'New Product' }}</span>
         </div>
-        <div class="actions">
+        <div class="actions" *ngIf="view === 'productsPage'">
             <button class="beautiful-button small">Make Offer</button>
+            <button class="beautiful-button small floating">View Product</button>
+        </div>
+
+        <div class="actions" *ngIf="view === 'userPanel'">
+            <button class="beautiful-button small">Delist</button>
             <button class="beautiful-button small floating">View Product</button>
         </div>
     </div>`
 })
 export class Product {
-    
+    @Input() item: any;
+    @Input() view: any;
 }

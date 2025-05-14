@@ -95,3 +95,16 @@
     flex-direction: column;
     gap: 2rem;
 }
+
+.myProducts {
+    width: 100%;
+    min-height: 600px;
+}
+
+.myProducts>.justified {
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-left: 60px;
+}

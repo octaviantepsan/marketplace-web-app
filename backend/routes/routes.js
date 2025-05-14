@@ -105,11 +105,11 @@ router.post('/addItem', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received POST request to ['/addItem'] ... ");
 
-    if (utils.processItemData(req.body.iname, req.body.itype, req.body.stock) === true) {
-        const query = `INSERT INTO Items (ItemName, ItemType, Stock, VendorId)
-                       VALUES (?, ?, ?, ?)
+    if (utils.processItemData(req.body.iname, req.body.categ, req.body.stock, req.body.price) === true) {
+        const query = `INSERT INTO Items (ItemName, Category, Stock, Price, VendorId)
+                       VALUES (?, ?, ?, ?, ?)
                        ON DUPLICATE KEY UPDATE Stock = Stock + VALUES(Stock)`;
-        const values = [req.body.iname, req.body.itype, req.body.stock, req.body.userId];
+        const values = [req.body.iname, req.body.categ, req.body.stock, req.body.price, req.body.userId];
 
         db.query(query, values, (err) => {
             if (err) {
@@ -126,7 +126,7 @@ router.post('/addItem', async (req, res) => {
 
 router.get('/getUserData', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getUsers'] ... ");
+    console.log("Received GET request to ['/getUserData'] ... ");
 
     const query = `SELECT * FROM Users WHERE UserId = ?`;
     const values = [req.query.userId];
@@ -142,6 +142,30 @@ router.get('/getUserData', async (req, res) => {
         }
         else {
             res.status(400).json({ message: "User not found" });
+        }
+    });
+});
+
+router.get('/getProducts', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received GET request to ['/getProducts'] ... ");
+
+    const isQuery = req.query && req.query.userId;  // check if a query was sent
+
+    const query = isQuery ? `SELECT * FROM Items WHERE VendorId = ?` : `Select * FROM Items`;
+    const values = isQuery ? [req.query.userId] : [];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results);
+        }
+        else {
+            res.status(400).json({ message: "Items not found" });
         }
     });
 });
