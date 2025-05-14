@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 export const SERVER_API_URL = "http://localhost:4200/api";
 
@@ -61,4 +61,9 @@ export class AppService {
   getUserData(queryParam: string): Observable<any> {
     return this.http.get(SERVER_API_URL + "/getUserData", { params: {userId: queryParam} });
   }
+
+  getProducts(): Observable<any> {
+    return of(null);
+  }
+
 }
