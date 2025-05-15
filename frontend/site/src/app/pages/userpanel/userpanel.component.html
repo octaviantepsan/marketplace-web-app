@@ -27,9 +27,9 @@
                                 <input ngModel type="text" id="iname" name="iname" required><br><br>
                                 <label for="categ">Category:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="categ" name="categ" required><br><br>
-                                <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="text" id="price" name="price"
-                                    required><br><br>
+                                <label
+                                    for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input ngModel type="text" id="price" name="price" required><br><br>
                                 <label
                                     for="stock">Stock:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="number" id="stock" name="stock" required><br><br>
@@ -43,7 +43,9 @@
 
             <!-- MyData -->
             <div class="data-wrapper" *ngIf="showMyData">
-                <div style="text-align: center; margin-bottom: 30px; font-size: 24px">My Account</div>
+                <div class="myAccountHeaderWrapper">
+                    <div class="myAccountHeader">My Account</div>
+                </div>
 
                 <div style="display: flex; flex-direction: column; gap: 3rem;" *ngIf="connectedUserData">
                     <div class="data-container">
@@ -53,7 +55,7 @@
 
                     <div class="data-container">
                         <div style="font-weight: bold;">Password:</div>
-                        <div>{{ connectedUserData?.Passw || 'Not Available'}}</div>
+                        <div>{{ connectedUserData?.Passw || 'Not Available'}}</div> <!--Show password or not ?-->
                     </div>
 
                     <div class="data-container">
@@ -95,11 +97,38 @@
 
             <!-- MyItems -->
             <div class="myProducts" *ngIf="showMyitems">
-                <div style="text-align: center; margin-bottom: 30px; font-size: 24px">My Items</div>
-                <div class="justified">
-                    <app-product *ngFor="let product of myItems" [item]="product" [view]="mode"></app-product>
+                <div class="section-title">My Items</div>
+                <div class="product-table">
+                    <div class="product-row header">
+                        <div class="cell image-column">Image</div>
+                        <div class="cell title-column">Title</div>
+                        <div class="cell status-column">Status</div>
+                        <div class="cell actions-column">Actions</div>
+                    </div>
+
+                    <div class="product-row" *ngFor="let product of myItems">
+                        <div class="cell image-column">
+                            <img src="assets/box.png" class="thumbnail" />
+                        </div>
+                        <div class="cell title-column">
+                            {{ product?.ItemName || 'New Product' }}
+                        </div>
+                        <div class="cell status-column">
+                            <!-- Placeholder for now -->
+                            <span>-</span>
+                        </div>
+                        <div class="cell actions-column">
+                            <ng-container *ngIf="connectedUserData.IsVendor === 1">
+                                <button class="beautiful-button small">Take Action</button>
+                            </ng-container>
+                            <ng-container *ngIf="connectedUserData.IsVendor === 0">
+                                <button class="beautiful-button small">Cancel</button>
+                            </ng-container>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

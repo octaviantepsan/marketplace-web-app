@@ -14,18 +14,12 @@ import { FormsModule } from '@angular/forms';
         <div class="title">
             <span>{{ item?.ItemName || 'New Product' }}</span>
         </div>
-        <div class="actions" *ngIf="view === 'productsPage'">
+        <div class="actions">
             <button class="beautiful-button small">Make Offer</button>
-            <button class="beautiful-button small floating">View Product</button>
-        </div>
-
-        <div class="actions" *ngIf="view === 'userPanel'">
-            <button class="beautiful-button small">Delist</button>
             <button class="beautiful-button small floating">View Product</button>
         </div>
     </div>`
 })
 export class Product {
     @Input() item: any;
-    @Input() view: any;
 }

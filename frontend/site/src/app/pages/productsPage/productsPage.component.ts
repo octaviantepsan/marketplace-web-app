@@ -69,7 +69,7 @@ interface FilterOptions {
                 </div>
                 <div class="products">
                     <div class="justified">
-                        <app-product *ngFor="let product of products" [item]="product" [view] = "mode"></app-product>
+                        <app-product *ngFor="let product of products" [item]="product"></app-product>
                     </div>
                 </div>    
             </div>
@@ -135,7 +135,6 @@ export class ProductsPageComponent {
         category: 'all',
     };
     products = [1, 2, 3, 4, 5, 6, 7];
-    mode: string = "productsPage";
 
     constructor(private appService: AppService) { }
 
