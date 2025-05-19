@@ -5,6 +5,15 @@ const router = express.Router();
 const frontendURL = 'http://localhost:4200';
 const allowCORS = 'Access-Control-Allow-Origin';
 
+const cloudinary = require('cloudinary').v2;
+
+// Cloudinary Configuration 
+cloudinary.config({
+    cloud_name: "di2n1y2e6",
+    api_key: "842555218398851",
+    api_secret: "fTOsYEEWukHpEyblxSIPKpseCU8"
+});
+
 const db = mysql.createPool({
     host: "localhost",
     user: "root",
@@ -106,18 +115,32 @@ router.post('/addItem', async (req, res) => {
     console.log("Received POST request to ['/addItem'] ... ");
 
     if (utils.processItemData(req.body.iname, req.body.categ, req.body.stock, req.body.price) === true) {
-        const query = `INSERT INTO Items (ItemName, Category, Stock, Price, VendorId)
+        try {
+            const upload = cloudinary.uploader.upload(
+                req.body.image,
+                {
+                    public_id: req.body.image.slice(-10),
+                    folder: "octav-marketplace"
+                });
+            let secureUrl = '';
+            upload.then(async (cloudinaryData) => {
+                secureUrl = cloudinaryData.secure_url;
+                const query = `INSERT INTO Items (ItemName, Category, Stock, Price, VendorId, Image)
                        VALUES (?, ?, ?, ?, ?)
                        ON DUPLICATE KEY UPDATE Stock = Stock + VALUES(Stock)`;
-        const values = [req.body.iname, req.body.categ, req.body.stock, req.body.price, req.body.userId];
-
-        db.query(query, values, (err) => {
-            if (err) {
-                console.error(err.message);
-                res.status(500).json({ message: err.message });
-            }
-            res.status(200).json({ message: "added item succesfully" });
-        });
+                const values = [req.body.iname, req.body.categ, req.body.stock, req.body.price, req.body.userId, secureUrl];
+                db.query(query, values, (err) => {
+                    if (err) {
+                        console.error(err.message);
+                        res.status(500).json({ message: err.message });
+                    }
+                    res.status(200).json({ message: "added item succesfully" });
+                });
+            })
+        } catch (error) {
+            console.error(error);
+            res.status(500).json(error);
+        }
     }
     else {
         res.status(400).json({});
