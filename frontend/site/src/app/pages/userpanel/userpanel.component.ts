@@ -19,6 +19,7 @@ export class UserpanelComponent {
   connectedUserData: any = null;
   myItems: any[] = [];
   mode: string;
+  newProductImg: string = "";
 
   constructor(private appService: AppService) {
     this.showMyData = true;
@@ -49,9 +50,31 @@ export class UserpanelComponent {
     this.showAddItem = true;
   }
 
+  uploadProductImage(imageRef: any): void {
+    const file: File = imageRef?.files[0];
+    if (file) {
+      let reader = new FileReader();
+      let imageInBase64;
+      let outerContext = this;
+      reader.readAsDataURL(file as Blob);
+      reader.onloadend = function () {
+        imageInBase64 = reader.result;
+        outerContext.populateImageContainerVisually(imageInBase64);
+        (outerContext.newProductImg as any) = imageInBase64;
+      }
+    }
+  }
+
+  populateImageContainerVisually(imageUrl: string | ArrayBuffer | null): void {
+    try {
+      (document.getElementById("productImgDisplay") as any).src = imageUrl;
+    } catch (err) { }
+  }
+
   addItem($event: any, itemForm: NgForm) {
     let body = itemForm.form.value;  //body devine un Object avand ca atribute input-urile care apartin de registerForm -> fname | lname | adress | city
     body["userId"] = this.userId;
+    body["image"] = this.newProductImg;
 
     $event.preventDefault();
 

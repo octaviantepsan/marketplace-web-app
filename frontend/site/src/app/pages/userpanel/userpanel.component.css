@@ -186,6 +186,17 @@
     border-radius: 4px;
 }
 
+.product-img-container {
+    display: grid;
+    justify-content: center;
+}
+
+.product-img-container > input {
+    padding-left: 20%; 
+    margin-top: 5px;
+     margin-bottom: 10px;
+}
+
 /* * {
     outline: 1px solid red;     Check which element is out of bounds
 } */
