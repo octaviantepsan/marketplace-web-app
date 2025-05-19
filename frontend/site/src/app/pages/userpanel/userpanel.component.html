@@ -30,9 +30,6 @@
                                 <label
                                     for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="price" name="price" required><br><br>
-                                <label
-                                    for="stock">Stock:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="number" id="stock" name="stock" required><br><br>
                                 <div class="product-img-container">
                                     <label for="imageUrl">Upload Image</label>
                                     <input type="file" accept="image/*" id="imageUrl"
@@ -64,7 +61,6 @@
                     <div class="data-container">
                         <div style="font-weight: bold;">Password:</div>
                         <div>{{ connectedUserData?.Passw || 'Not Available'}}</div>
-                        <!--Show password or not ? /// adi: lol ? delet dis -->
                     </div>
 
                     <div class="data-container">
@@ -89,7 +85,7 @@
 
                     <div class="data-container">
                         <div style="font-weight: bold;">Date Created:</div>
-                        <div>{{ connectedUserData?.DateCreated | date: 'short' || 'Not Available'}}</div>
+                        <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'Not Available' }}</div>
                     </div>
 
                     <div class="data-container" *ngIf="connectedUserData.IsVendor === 1">
@@ -117,19 +113,25 @@
 
                     <div class="product-row" *ngFor="let product of myItems">
                         <div class="cell image-column">
-                            <img src="assets/box.png" class="thumbnail" />
+                            <img [src]="product?.Image" onerror="this.onerror=null;this.src='../../../assets/box.png';" class="thumbnail">
                         </div>
                         <div class="cell title-column">
                             {{ product?.ItemName || 'New Product' }}
                         </div>
                         <div class="cell status-column">
-                            <!-- Placeholder for now -->
-                            <span>-</span>
+                            {{ product?.Status || '-' }}
                         </div>
                         <div class="cell actions-column">
                             <ng-container *ngIf="connectedUserData.IsVendor === 1">
                                 <button class="beautiful-button small">Take Action</button>
                             </ng-container>
+
+                            <ng-container>
+                                <button class="beautiful-button small"
+                                    style="background-color: #bbbbbb57; color: black;" (click)="sendProductData(product)">View Product</button>
+                            </ng-container>
+                            
+
                             <ng-container *ngIf="connectedUserData.IsVendor === 0">
                                 <button class="beautiful-button small">Cancel</button>
                             </ng-container>

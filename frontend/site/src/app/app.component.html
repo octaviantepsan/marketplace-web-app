@@ -21,6 +21,7 @@
 </div>
 
 <app-carousel *ngIf="showHomepageElements"></app-carousel>
-<app-products-page *ngIf="showHomepageElements"></app-products-page>
+<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage" ></app-signin>
-<app-userpanel *ngIf="showUserPanelPage" [userId]="connectedUserId.userId"></app-userpanel>
+<app-userpanel (clickedItemResponse)="captureProductResponse($event)" *ngIf="showUserPanelPage" [userId]="connectedUserId.userId"></app-userpanel>
+<app-product-view *ngIf="showProductView" [itemData]="receivedClickedItemData"></app-product-view>

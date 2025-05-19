@@ -68,4 +68,9 @@ export class AppService {
     return this.http.get(SERVER_API_URL + "/getProducts", options);
   }
 
+  getVendorName(queryParam?: string): Observable<any> {
+    const options = queryParam ? { params: { vendorId: queryParam } } : {};
+
+    return this.http.get(SERVER_API_URL + "/getVendorName", options);
+  }
 }

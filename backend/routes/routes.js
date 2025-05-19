@@ -114,7 +114,7 @@ router.post('/addItem', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received POST request to ['/addItem'] ... ");
 
-    if (utils.processItemData(req.body.iname, req.body.categ, req.body.stock, req.body.price) === true) {
+    if (true) {
         try {
             const upload = cloudinary.uploader.upload(
                 req.body.image,
@@ -125,10 +125,9 @@ router.post('/addItem', async (req, res) => {
             let secureUrl = '';
             upload.then(async (cloudinaryData) => {
                 secureUrl = cloudinaryData.secure_url;
-                const query = `INSERT INTO Items (ItemName, Category, Stock, Price, VendorId, Image)
-                       VALUES (?, ?, ?, ?, ?)
-                       ON DUPLICATE KEY UPDATE Stock = Stock + VALUES(Stock)`;
-                const values = [req.body.iname, req.body.categ, req.body.stock, req.body.price, req.body.userId, secureUrl];
+                const query = `INSERT INTO Items (ItemName, Category, Price, VendorId, Image)
+                       VALUES (?, ?, ?, ?, ?)`
+                const values = [req.body.iname, req.body.categ, req.body.price, req.body.userId, secureUrl];
                 db.query(query, values, (err) => {
                     if (err) {
                         console.error(err.message);
@@ -161,6 +160,7 @@ router.get('/getUserData', async (req, res) => {
         }
 
         if (results.length > 0) {
+            //console.log(results[0]);
             res.status(200).json(results[0]);
         }
         else {
@@ -189,6 +189,29 @@ router.get('/getProducts', async (req, res) => {
         }
         else {
             res.status(400).json({ message: "Items not found" });
+        }
+    });
+});
+
+router.get('/getVendorName', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received GET request to ['/getVendorName'] ... ");
+
+    const query = `SELECT LastName, FirstName FROM Users WHERE UserId = ?`;
+    const values = [req.query.vendorId];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            //console.log(results[0]);
+            res.status(200).json(results[0]);
+        }
+        else {
+            res.status(400).json({ message: "Vendor not found" });
         }
     });
 });

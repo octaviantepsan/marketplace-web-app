@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Product } from "../product/product.component";
 import { AppService } from '../../services/app.service';
@@ -69,7 +69,7 @@ interface FilterOptions {
                 </div>
                 <div class="products">
                     <div class="justified">
-                        <app-product *ngFor="let product of products" [item]="product"></app-product>
+                        <app-product (viewResponse)="captureProductResponse($event)" *ngFor="let product of products" [item]="product"></app-product>
                     </div>
                 </div>    
             </div>
@@ -135,6 +135,9 @@ export class ProductsPageComponent {
         category: 'all',
     };
     products = [1, 2, 3, 4, 5, 6, 7];
+    viewedProductData: any = null;
+
+    @Output() clickedItemResponse = new EventEmitter<Object>();
 
     constructor(private appService: AppService) { }
 
@@ -201,4 +204,8 @@ export class ProductsPageComponent {
         return 0
     }
 
+    captureProductResponse($event: Object) {
+        this.viewedProductData = $event;
+        this.clickedItemResponse.emit(this.viewedProductData);
+    }
 }

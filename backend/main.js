@@ -25,7 +25,7 @@ db.getConnection((err, connection) => {
 });
 
 // for body parsing
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 // routes and cors
 app.use('/api', routes);

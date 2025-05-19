@@ -7,7 +7,7 @@ import { Product } from '../product/product.component';
 @Component({
   selector: 'app-userpanel',
   standalone: true,
-  imports: [FormsModule, CommonModule, Product],
+  imports: [FormsModule, CommonModule],
   templateUrl: './userpanel.component.html',
   styleUrl: './userpanel.component.css'
 })
@@ -20,6 +20,8 @@ export class UserpanelComponent {
   myItems: any[] = [];
   mode: string;
   newProductImg: string = "";
+
+  @Output() clickedItemResponse = new EventEmitter<Object>();
 
   constructor(private appService: AppService) {
     this.showMyData = true;
@@ -99,8 +101,6 @@ export class UserpanelComponent {
   }
 
   getUserData() {
-    //$event.preventDefault();  ASK ADI
-
     let outerContext = this;
 
     this.appService.getUserData(this.userId).subscribe({
@@ -116,8 +116,6 @@ export class UserpanelComponent {
   }
 
   getMyItems() {
-    //$event.preventDefault();  ASK ADI
-
     let outerContext = this;
 
     this.appService.getProducts(this.userId).subscribe({
@@ -130,5 +128,9 @@ export class UserpanelComponent {
         }
       }
     })
+  }
+
+  sendProductData($event: Object) {
+    this.clickedItemResponse.emit($event);
   }
 }

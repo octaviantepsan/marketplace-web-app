@@ -1,0 +1,45 @@
+<div class="product-view-wrapper">
+    <div class="product-view-container">
+        <div class="product-gallery">
+            <img [src]="itemData?.Image" onerror="this.onerror=null;this.src='../../../assets/box.png';"
+                class="main-image" />
+        </div>
+
+        <div class="product-details">
+            <h1 class="product-title">{{ itemData?.ItemName }}</h1>
+            <p class="product-description">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
+                into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+                release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+            </p>
+
+            <div class="product-meta">
+                <p><strong>Price:</strong> {{ itemData?.Price }} RON </p>
+                <p><strong>Category:</strong> {{ firstLetterUpperCase(itemData?.Category) }}</p>
+                <p><strong>Vendor:</strong> {{ vendorName }}</p>
+                <p><strong>Availability:</strong> {{ firstLetterUpperCase(itemData?.Availability) }}</p>
+            </div>
+
+            <button class="beautiful-button" style="max-width: 15rem;" (click)="openModal()">Buy Now</button>
+        </div>
+    </div>
+
+</div>
+
+<div id="app-modal-overlay" class="modal-overlay" (click)="closeModal($event)">
+    <div class="modal-content">
+        <span class="modal-close" (click)="closeModal($event)">&times;</span>
+
+        <div class="modal-body">
+            <h2>Confirm Action</h2>
+            <p>Are you sure you want to proceed?</p>
+
+            <div class="modal-actions">
+                <button class="confirm-button" (click)="closeModal($event)">Yes, Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -184,17 +184,20 @@
     height: 50px;
     object-fit: cover;
     border-radius: 4px;
+    flex-shrink: 0;
+    display: block;
 }
+
 
 .product-img-container {
     display: grid;
     justify-content: center;
 }
 
-.product-img-container > input {
-    padding-left: 20%; 
+.product-img-container>input {
+    padding-left: 20%;
     margin-top: 5px;
-     margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 /* * {

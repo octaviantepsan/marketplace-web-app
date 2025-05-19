@@ -5,11 +5,13 @@ import { AppService } from './services/app.service';
 import { CarouselComponent } from "./pages/carousel/carousel.component";
 import { ProductsPageComponent } from "./pages/productsPage/productsPage.component";
 import { UserpanelComponent } from './pages/userpanel/userpanel.component';
+import { Product } from "./pages/product/product.component";
+import { ProductViewComponent } from "./pages/productView/product-view/product-view.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent],
+  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent, ProductViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -24,6 +26,8 @@ export class AppComponent {
   showHomepageElements: boolean;
   connectedUserId: any = null;
   showUserPanelBtn: boolean;
+  showProductView: boolean;
+  receivedClickedItemData: any = null;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -34,6 +38,7 @@ export class AppComponent {
     this.showHomepageElements = true;
     this.showUserPanelPage = false;
     this.showUserPanelBtn = false;
+    this.showProductView = false;
   }
 
   onSignIn() {
@@ -41,6 +46,7 @@ export class AppComponent {
     this.showSignInPage = true;
     this.showReturnBtn = true;
     this.showHomepageElements = false;
+    this.showProductView = false;
   }
 
   onSignOut() {
@@ -52,6 +58,7 @@ export class AppComponent {
     this.showReturnBtn = false;
     this.showUserPanelPage = false;
     this.showUserPanelBtn = false;
+    this.showProductView = false;
   }
 
   onReturn() {
@@ -67,6 +74,7 @@ export class AppComponent {
 
     this.showReturnBtn = false;
     this.showHomepageElements = true;
+    this.showProductView = false;
   }
 
   onUserPanel() {
@@ -77,6 +85,7 @@ export class AppComponent {
     this.showSignInBtn = false;
     this.showSignOutBtn = true;
     this.showUserPanelBtn = false;
+    this.showProductView = false;
   }
 
   captureAuthResponse($event: Object) {
@@ -90,38 +99,49 @@ export class AppComponent {
     this.connectedUserId = $event;
   }
 
-  testGetRequest() {
-    this.appService.getUsers().subscribe({
-      next(data: any) {
-        console.log(data);
-      },
-      error(err) {
-        // status number-ul trebuie sa coincida cu cel pe care il returnezi in BE pe error ca sa tratezi eroarea
-        if (err && err['status'] === 500) {
-          console.log(err);
-        }
-      }
-    })
+  captureProductResponse($event: Object) {
+    this.showHomepageElements = false;
+    this.showReturnBtn = true;
+    this.showProductView = true;
+    this.showUserPanelPage = false;
+    this.receivedClickedItemData = $event;
+    if (this.isUserAuth === true) {
+      this.showUserPanelBtn = true;
+    }
   }
 
-  testPostRequest() {
-    let body = {
-      lastName: "Test",
-      firstName: "Test",
-      city: "Test",
-      adress: "Test"
-    }
-    this.appService.postUser(body).subscribe({
-      next(data) {
-        console.log(data.message);
-      },
-      error(err) {
-        // 400 adica 'Bad Request' punem de obicei cand datele de transmis sunt transmise incorect. Adica body-ul a avut structura proasta. De obicei validam asta in BE.
-        if (err && err['status'] === 400) {
-          console.log(err);
-        }
-      }
-    })
-  }
+  // testGetRequest() {
+  //   this.appService.getUsers().subscribe({
+  //     next(data: any) {
+  //       console.log(data);
+  //     },
+  //     error(err) {
+  //       // status number-ul trebuie sa coincida cu cel pe care il returnezi in BE pe error ca sa tratezi eroarea
+  //       if (err && err['status'] === 500) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   })
+  // }
+
+  // testPostRequest() {
+  //   let body = {
+  //     lastName: "Test",
+  //     firstName: "Test",
+  //     city: "Test",
+  //     adress: "Test"
+  //   }
+  //   this.appService.postUser(body).subscribe({
+  //     next(data) {
+  //       console.log(data.message);
+  //     },
+  //     error(err) {
+  //       // 400 adica 'Bad Request' punem de obicei cand datele de transmis sunt transmise incorect. Adica body-ul a avut structura proasta. De obicei validam asta in BE.
+  //       if (err && err['status'] === 400) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   })
+  // }
 
 }
