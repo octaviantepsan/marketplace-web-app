@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Product } from "../product/product.component";
 import { AppService } from '../../services/app.service';
+import { TypeProduct } from '../../interfaces/product.interface';
 
 interface FilterOptions {
     sortBy: string;
@@ -10,6 +11,13 @@ interface FilterOptions {
     maxPrice: number;
     availability: string;
     category: string;
+}
+
+interface PagingOptions {
+    pages: number[],
+    recordsPerPage: number,
+    totalRecords: number,
+    currentPage: number
 }
 
 @Component({
@@ -69,9 +77,17 @@ interface FilterOptions {
                 </div>
                 <div class="products">
                     <div class="justified">
-                        <app-product (viewResponse)="captureProductResponse($event)" *ngFor="let product of products" [item]="product"></app-product>
+                        <ng-container *ngFor="let product of products">
+                            <app-product *ngIf="product.assignedPage === pagination.currentPage" [item]="product" (viewResponse)="captureProductResponse($event)"></app-product>
+                        </ng-container>
                     </div>
-                </div>    
+                </div>
+            </div>
+            <div class="paginator">
+                <div class="page-btn" *ngFor="let page of pagination.pages; let i = index">
+                    <button [id]="'page-' + (i + 1)" class="beautiful-button floating" 
+                        style="padding: 10px 15px;" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+                </div>
             </div>
         </div>
     `,
@@ -124,6 +140,17 @@ interface FilterOptions {
         .price-inputs input[type="number"] {
             width: 80px;
         }
+
+        .paginator {
+            display: flex;
+            justify-content: end;
+            padding-right: 15%;
+            padding-bottom: 5%;
+        }
+
+        .page-btn {
+            margin-right: 5px;
+        }
   `]
 })
 export class ProductsPageComponent {
@@ -132,9 +159,15 @@ export class ProductsPageComponent {
         minPrice: 0,
         maxPrice: 1000,
         availability: 'available',
-        category: 'all',
+        category: 'all'
     };
-    products = [1, 2, 3, 4, 5, 6, 7];
+    products: TypeProduct[] = [];
+    pagination: PagingOptions = {
+        pages: [],
+        totalRecords: 0,
+        recordsPerPage: 9, // predefined
+        currentPage: 1
+    };
     viewedProductData: any = null;
 
     @Output() clickedItemResponse = new EventEmitter<Object>();
@@ -166,16 +199,18 @@ export class ProductsPageComponent {
                     return e.Price >= outerContext.filters['minPrice'] &&
                         e.Price <= outerContext.filters['maxPrice'] &&
                         e.Availability.toLowerCase() === outerContext.filters['availability'].toLowerCase() &&
-                        (outerContext.filters['category'].toLowerCase() === 'all' || 
-                        e.Category.toLowerCase() === outerContext.filters['category'].toLowerCase());
+                        (outerContext.filters['category'].toLowerCase() === 'all' ||
+                            e.Category.toLowerCase() === outerContext.filters['category'].toLowerCase());
                 }).sort((a, b) => outerContext.compareFn(a, b));
+                // after we have products filtered and sorted, setup pagination >>
+                outerContext.paginateProducts();
             },
             error(err) {
                 if (err && err['status'] === 500) {
                     console.log(err);
                 }
             }
-        })
+        });
     }
 
     compareFn(a: any, b: any) {
@@ -202,6 +237,26 @@ export class ProductsPageComponent {
                 break;
         }
         return 0
+    }
+
+    paginateProducts() {
+        this.pagination.totalRecords = this.products.length;
+        this.pagination.pages = Array(Math.ceil(this.pagination.totalRecords / this.pagination.recordsPerPage)).fill(0);
+        this.products.forEach((product: TypeProduct, index) => {
+            product.assignedPage = (Math.floor((index + 1) / this.pagination.recordsPerPage)) + 1;
+        });
+        setTimeout(() => {
+            document.getElementById('page-1')?.classList.remove('floating');
+        });
+    }
+
+    changePage(i: number) {
+        this.pagination.currentPage = i;
+        // remove neighbors selected color
+        document.getElementById(`page-${i - 1}`)?.classList.add('floating');
+        document.getElementById(`page-${i + 1}`)?.classList.add('floating');
+        // make selected page blue
+        document.getElementById(`page-${i}`)?.classList.remove('floating');
     }
 
     captureProductResponse($event: Object) {
