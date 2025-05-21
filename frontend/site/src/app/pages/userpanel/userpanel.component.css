@@ -200,6 +200,20 @@
     margin-bottom: 10px;
 }
 
+.form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+select {
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
 /* * {
     outline: 1px solid red;     Check which element is out of bounds
 } */

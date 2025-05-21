@@ -20,6 +20,10 @@ export class UserpanelComponent {
   myItems: any[] = [];
   mode: string;
   newProductImg: string = "";
+  selectedStatus: string = "";
+  selectedItemId: any = null;
+  selectedItemStatus: string = "";
+  purchaseInfo: any = null;
 
   @Output() clickedItemResponse = new EventEmitter<Object>();
 
@@ -132,5 +136,101 @@ export class UserpanelComponent {
 
   sendProductData($event: Object) {
     this.clickedItemResponse.emit($event);
+  }
+
+  openModal(): void {
+    if (this.userId != null) {
+      const modal = document.getElementById('app-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+    else {
+      alert("You must be signed in to procced");
+    }
+  }
+
+  closeModal(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (
+      target.id === 'app-modal-overlay' ||
+      target.classList.contains('modal-close') ||
+      target.closest('.modal-close-button')
+    ) {
+      this.hideModal();
+    }
+  }
+
+  hideModal(): void {
+    const modal = document.getElementById('app-modal-overlay');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  updateDeliveryStatus() {
+    if (this.selectedStatus == "") {
+      this.selectedStatus = this.selectedItemStatus;
+    }
+
+    let body = {
+      status: this.selectedStatus,
+      itemId: this.selectedItemId
+    }
+
+    this.appService.updateDeliveryStatus(body).subscribe({
+      next(data: any) {
+        console.log(data);
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    });
+    this.getMyItems();
+    this.hideModal();
+  }
+
+  getPurchaseInfo() {
+    let body = {
+      userId: this.userId,
+      itemId: this.selectedItemId
+    }
+
+    let outerContext = this;
+
+    this.appService.getPurchaseInfo(body).subscribe({
+      next(data: any) {
+        console.log(data);
+
+        outerContext.purchaseInfo = data;
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    })
+  }
+
+  markAsSold(): void {
+    let body = {
+      status: "Sold",
+      itemId: this.selectedItemId
+    };
+
+    this.appService.updateDeliveryStatus(body).subscribe({
+      next(data: any) {
+        console.log(data);
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    });
+    this.getMyItems();
+    this.hideModal();
   }
 }

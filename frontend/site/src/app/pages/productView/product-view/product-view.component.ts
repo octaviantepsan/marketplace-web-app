@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppService } from '../../../services/app.service';
 
 @Component({
@@ -11,11 +11,13 @@ import { AppService } from '../../../services/app.service';
 export class ProductViewComponent {
   @Input() itemData: any;
   vendorName: string = '';
+  @Input() userId?: any = null;
+  
+  @Output() clickedItemResponse = new EventEmitter<any>();
 
   constructor(private appService: AppService) { }
 
   ngOnInit(): void {
-    console.log(this.itemData);
     this.getVendorName();
   }
 
@@ -28,24 +30,38 @@ export class ProductViewComponent {
   }
 
   openModal(): void {
-    const modal = document.getElementById('app-modal-overlay');
-    if (modal) {
-      modal.style.display = 'flex';
+    if (this.userId != null) {
+      const modal = document.getElementById('app-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
     }
+    else {
+      alert("You must be signed in to procced");
+    }
+  }
+
+  confirmPurchase(): void {
+    this.updateItemStatus("Requested for delivery");
+    this.createTransaction();
+    this.clickedItemResponse.emit();
   }
 
   closeModal(event: Event): void {
     const target = event.target as HTMLElement;
-    const modal = document.getElementById('app-modal-overlay');
-
     if (
       target.id === 'app-modal-overlay' ||
       target.classList.contains('modal-close') ||
       target.closest('.modal-close-button')
     ) {
-      if (modal) {
-        modal.style.display = 'none';
-      }
+      this.hideModal();
+    }
+  }
+
+  hideModal(): void {
+    const modal = document.getElementById('app-modal-overlay');
+    if (modal) {
+      modal.style.display = 'none';
     }
   }
 
@@ -68,4 +84,40 @@ export class ProductViewComponent {
     })
   }
 
+  updateItemStatus(newStatus: string) {
+    let bodyStatus = {
+      status: newStatus,
+      itemId: this.itemData.ItemId,
+      availability: "sold_out"
+    }
+
+    this.appService.updateItemStatus(bodyStatus).subscribe({
+      next(data: any) {
+        console.log(data);
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    })
+  }
+
+  createTransaction() {
+    let bodyTransaction = {
+      vendorId: this.itemData.VendorId,
+      buyerId: this.userId,
+      itemId: this.itemData.ItemId
+    }
+
+    this.appService.createTransaction(bodyTransaction).subscribe({
+      next(data: any) {
+      },
+      error(err) {
+        if (err && err['status'] === 500) {
+          console.log(err);
+        }
+      }
+    })
+  }
 }

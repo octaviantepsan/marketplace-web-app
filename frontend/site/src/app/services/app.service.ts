@@ -73,4 +73,36 @@ export class AppService {
 
     return this.http.get(SERVER_API_URL + "/getVendorName", options);
   }
+
+  updateItemStatus(body: any): Observable<any> {
+    const options: HttpRequestOptions = {
+      observe: 'body',
+      responseType: 'json'
+    };
+    return this.http.post(SERVER_API_URL + "/updateItemStatus", body, options);
+  }
+
+  updateDeliveryStatus(body: any): Observable<any> {
+    const options: HttpRequestOptions = {
+      observe: 'body',
+      responseType: 'json'
+    };
+    return this.http.post(SERVER_API_URL + "/updateDeliveryStatus", body, options);
+  }
+
+  createTransaction(body: any): Observable<any> {
+    const options: HttpRequestOptions = {
+      observe: 'body',
+      responseType: 'json'
+    };
+    return this.http.post(SERVER_API_URL + "/createTransaction", body, options);
+  }
+
+  getPurchaseInfo(body: any): Observable<any> {
+    const options: HttpRequestOptions = {
+      observe: 'body',
+      responseType: 'json'
+    };
+    return this.http.post(SERVER_API_URL + "/getPurchaseInfo", body, options);
+  }
 }

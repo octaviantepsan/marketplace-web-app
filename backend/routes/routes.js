@@ -114,7 +114,7 @@ router.post('/addItem', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received POST request to ['/addItem'] ... ");
 
-    if (true) {
+    if (utils.processItemData(req.body.iname, req.body.categ, req.body.price) == true) {
         try {
             const upload = cloudinary.uploader.upload(
                 req.body.image,
@@ -160,7 +160,6 @@ router.get('/getUserData', async (req, res) => {
         }
 
         if (results.length > 0) {
-            //console.log(results[0]);
             res.status(200).json(results[0]);
         }
         else {
@@ -207,11 +206,87 @@ router.get('/getVendorName', async (req, res) => {
         }
 
         if (results.length > 0) {
-            //console.log(results[0]);
             res.status(200).json(results[0]);
         }
         else {
             res.status(400).json({ message: "Vendor not found" });
         }
+    });
+});
+
+router.post('/updateItemStatus', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/updateItemStatus'] ... ");
+
+    const query = `UPDATE Items SET Status = ?, Availability = ?, BuyTimestamp = NOW() WHERE ItemId = ?`;
+    const values = [req.body.status, req.body.availability, req.body.itemId];
+
+    db.query(query, values, (err) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+        res.status(200).json({});
+    });
+});
+
+router.post('/updateDeliveryStatus', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/updateDeliveryStatus'] ... ");
+
+    const query = `UPDATE Items SET Status = ? WHERE ItemId = ?`;
+    const values = [req.body.status, req.body.itemId];
+
+    db.query(query, values, (err) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+        res.status(200).json({});
+    });
+});
+
+router.post('/createTransaction', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/createTransaction'] ... ");
+
+    if (req.body.vendorId != req.body.buyerId) {
+        const query = `INSERT INTO Transactions (ItemId, VendorId, BuyerId)
+                VALUES (?, ?, ?)`;
+        const values = [req.body.itemId, req.body.vendorId, req.body.buyerId];
+
+        db.query(query, values, (err) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ message: err.message });
+            }
+            res.status(200).json({});
+        });
+    }
+    else {
+        res.status(400).json({});
+    }
+});
+
+router.post('/getPurchaseInfo', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received POST request to ['/getPurchaseInfo'] ... ");
+
+    const query = 
+    `
+        SELECT U.LastName, U.FirstName, U.Address, U.Email, I.BuyTimestamp
+        FROM (Transactions AS T
+        INNER JOIN Items AS I ON T.ItemId = I.ItemId)
+        INNER JOIN Users AS U ON U.UserId = T.BuyerId
+        WHERE T.VendorId = ? AND T.ItemId = ? 
+    `;
+    const values = [req.body.userId, req.body.itemId];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+        res.status(200).json(results[0]);
     });
 });
