@@ -154,6 +154,9 @@ interface PagingOptions {
   `]
 })
 export class ProductsPageComponent {
+    @Input() userId?: any = null;
+    @Output() clickedItemResponse = new EventEmitter<Object>();
+    
     filters: FilterOptions = {
         sortBy: '',
         minPrice: 0,
@@ -169,9 +172,6 @@ export class ProductsPageComponent {
         currentPage: 1
     };
     viewedProductData: any = null;
-
-    @Input() userId?: any = null;
-    @Output() clickedItemResponse = new EventEmitter<Object>();
 
     constructor(private appService: AppService) { }
 

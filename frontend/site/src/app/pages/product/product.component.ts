@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TypeProduct } from '../../interfaces/product.interface';
 
 @Component({
     selector: 'app-product',
@@ -21,7 +22,7 @@ import { FormsModule } from '@angular/forms';
     </div>`
 })
 export class Product {
-    @Input() item: any;
+    @Input() item: TypeProduct | undefined;
     @Output() viewResponse = new EventEmitter<Object>();
 
     sendItemData() {
