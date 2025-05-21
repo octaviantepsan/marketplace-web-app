@@ -105,4 +105,16 @@ export class AppService {
     };
     return this.http.post(SERVER_API_URL + "/getPurchaseInfo", body, options);
   }
+
+  getProductsForNotif(queryParam?: string): Observable<any> {
+    const options = queryParam ? { params: { userId: queryParam } } : {};
+
+    return this.http.get(SERVER_API_URL + "/getProductsForNotif", options);
+  }
+  
+  getProductsForBuyer(queryParam?: string): Observable<any> {
+    const options = queryParam ? { params: { userId: queryParam } } : {};
+
+    return this.http.get(SERVER_API_URL + "/getProductsForBuyer", options);
+  }
 }

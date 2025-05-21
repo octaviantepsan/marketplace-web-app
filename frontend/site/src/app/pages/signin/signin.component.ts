@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../services/app.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-signin',
@@ -17,7 +18,7 @@ export class SigninComponent {
   showRegisterWarningNotif: boolean;
   showLoginWarningNotif: boolean;
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService, private toastService: ToastService) {
     this.showRegisterSuccesNotif = false;
     this.showRegisterWarningNotif = false;
     this.showLoginWarningNotif = false;
@@ -74,7 +75,7 @@ export class SigninComponent {
             userId: data.userId
           };
 
-          alert("ok");
+          outerContext.toastService.show('Signed in succesfully', 'success');
           outerContext.authResponse.emit(authResponseData);
         },
         error(err) {

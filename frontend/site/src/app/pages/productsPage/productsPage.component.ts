@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Product } from "../product/product.component";
 import { AppService } from '../../services/app.service';
@@ -134,9 +134,10 @@ export class ProductsPageComponent {
         availability: 'available',
         category: 'all',
     };
-    products = [1, 2, 3, 4, 5, 6, 7];
+    products: any[] = [];
     viewedProductData: any = null;
 
+    @Input() userId?: any = null;
     @Output() clickedItemResponse = new EventEmitter<Object>();
 
     constructor(private appService: AppService) { }

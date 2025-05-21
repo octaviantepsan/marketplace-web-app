@@ -125,9 +125,9 @@ router.post('/addItem', async (req, res) => {
             let secureUrl = '';
             upload.then(async (cloudinaryData) => {
                 secureUrl = cloudinaryData.secure_url;
-                const query = `INSERT INTO Items (ItemName, Category, Price, VendorId, Image)
-                       VALUES (?, ?, ?, ?, ?)`
-                const values = [req.body.iname, req.body.categ, req.body.price, req.body.userId, secureUrl];
+                const query = `INSERT INTO Items (ItemName, Category, Price, VendorId, Image, Description)
+                       VALUES (?, ?, ?, ?, ?, ?)`
+                const values = [req.body.iname, req.body.categ, req.body.price, req.body.userId, secureUrl, req.body.desc];
                 db.query(query, values, (err) => {
                     if (err) {
                         console.error(err.message);
@@ -172,10 +172,38 @@ router.get('/getProducts', async (req, res) => {
     res.set(allowCORS, frontendURL);
     console.log("Received GET request to ['/getProducts'] ... ");
 
-    const isQuery = req.query && req.query.userId;  // check if a query was sent
+    const isQuery = req.query && req.query.userId;
 
     const query = isQuery ? `SELECT * FROM Items WHERE VendorId = ?` : `Select * FROM Items`;
     const values = isQuery ? [req.query.userId] : [];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results);
+        }
+        else {
+            res.status(400).json({ message: "Items not found" });
+        }
+    });
+});
+
+router.get('/getProductsForBuyer', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received GET request to ['/getProductsForBuyer'] ... ");
+
+    const query =
+    `
+        SELECT I.ItemName, I.Category, I.Price, I.Availability, I.Status, I.BuyTimestamp 
+        FROM Items AS I
+        INNER JOIN Transactions as T ON T.ItemId = I.ItemId
+        WHERE T.BuyerId = ?
+    `;
+    const values =[req.query.userId];
 
     db.query(query, values, (err, results) => {
         if (err) {
@@ -288,5 +316,29 @@ router.post('/getPurchaseInfo', async (req, res) => {
             res.status(500).json({ message: err.message });
         }
         res.status(200).json(results[0]);
+    });
+});
+
+router.get('/getProductsForNotif', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+    console.log("Received GET request to ['/getProductsForNotif'] ... ");
+
+    const isQuery = req.query && req.query.userId;  // check if a query was sent
+
+    const query = `SELECT VendorId, Status FROM Items WHERE VendorId = ?`;
+    const values = [req.query.userId];
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: err.message });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results);
+        }
+        else {
+            res.status(400).json({ message: "Items not found" });
+        }
     });
 });

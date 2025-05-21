@@ -6,8 +6,8 @@
                 My Data
             </button>
             <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
-                (click)="onShowMyItems(); getMyItems()" *ngIf="connectedUserData.IsVendor === 1">
-                My Items
+                (click)="onShowMyItems(); getMyItems()">
+                {{ connectedUserData.IsVendor === 1 ? 'My Items' : 'Ordered Items' }}
             </button>
             <button class="beautiful-button" style="width: 100%; margin-bottom: 10px; padding: 10px;"
                 (click)="onShowAddItem()" *ngIf="connectedUserData.IsVendor === 1">
@@ -25,11 +25,18 @@
                             <form #itemForm="ngForm" style="text-align: center;">
                                 <label for="iname">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="iname" name="iname" required><br><br>
+
                                 <label for="categ">Category:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="categ" name="categ" required><br><br>
+
+                                <label for="desc">Description:&nbsp;&nbsp;&nbsp;</label><br>
+                                <textarea ngModel id="desc" name="desc" rows="4" cols="50" required
+                                    placeholder="Enter item description here"></textarea><br><br>
+
                                 <label
                                     for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <input ngModel type="text" id="price" name="price" required><br><br>
+
                                 <div class="product-img-container">
                                     <label for="imageUrl">Upload Image</label>
                                     <input type="file" accept="image/*" id="imageUrl"
@@ -87,16 +94,6 @@
                         <div style="font-weight: bold;">Date Created:</div>
                         <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'Not Available' }}</div>
                     </div>
-
-                    <div class="data-container" *ngIf="connectedUserData.IsVendor === 1">
-                        <div style="font-weight: bold;">Rating:</div>
-                        <div>{{ connectedUserData?.Rating || '0'}}</div>
-                    </div>
-
-                    <div class="data-container" *ngIf="connectedUserData.IsVendor == 1">
-                        <div style="font-weight: bold;">Sales:</div>
-                        <div>{{ connectedUserData?.Sales || '0'}}</div>
-                    </div>
                 </div>
             </div>
 
@@ -113,27 +110,28 @@
 
                     <div class="product-row" *ngFor="let product of myItems">
                         <div class="cell image-column">
-                            <img [src]="product?.Image" onerror="this.onerror=null;this.src='../../../assets/box.png';" class="thumbnail">
+                            <img [src]="product?.Image" onerror="this.onerror=null;this.src='../../../assets/box.png';"
+                                class="thumbnail">
                         </div>
                         <div class="cell title-column">
                             {{ product?.ItemName || 'New Product' }}
                         </div>
                         <div class="cell status-column">
-                            {{ product?.Status || '-' }}
+                            {{ connectedUserData?.IsVendor === 0 && product.Status === "Sold" ? "Paid & Received" :
+                            product?.Status || '-' }}
                         </div>
                         <div class="cell actions-column">
                             <ng-container *ngIf="connectedUserData.IsVendor === 1">
-                                <button class="beautiful-button small" [disabled]="product.Status === 'Listed' || product.Status === 'Sold'" (click)="openModal(); selectedItemId = product.ItemId; selectedItemStatus = product.Status; getPurchaseInfo(); ">Take Action</button>
+                                <button class="beautiful-button small"
+                                    [disabled]="product.Status === 'Listed' || product.Status === 'Sold'"
+                                    (click)="openModal(); selectedItemId = product.ItemId; selectedItemStatus = product.Status; getPurchaseInfo(); ">
+                                    Take Action</button>
                             </ng-container>
 
                             <ng-container>
                                 <button class="beautiful-button small"
-                                    style="background-color: #bbbbbb57; color: black;" (click)="sendProductData(product)">View Product</button>
-                            </ng-container>
-                            
-
-                            <ng-container *ngIf="connectedUserData.IsVendor === 0">
-                                <button class="beautiful-button small">Cancel</button>
+                                    style="background-color: #bbbbbb57; color: black;"
+                                    (click)="sendProductData(product)">View Product</button>
                             </ng-container>
                         </div>
                     </div>
@@ -145,62 +143,63 @@
 </div>
 
 <div id="app-modal-overlay" class="modal-overlay" (click)="closeModal($event)">
-  <div class="modal-content">
-    <span class="modal-close" (click)="closeModal($event)">&times;</span>
+    <div class="modal-content">
+        <span class="modal-close" (click)="closeModal($event)">&times;</span>
 
-    <div class="modal-body">
-      <h2 style="margin-bottom: 40px; margin-top: 0;">Manage Delivery Status</h2>
+        <div class="modal-body">
+            <h2 style="margin-bottom: 40px; margin-top: 0;">Manage Delivery Status</h2>
 
-      <!-- Buyer Info -->
-       <table style="margin: 0 auto; border-collapse: collapse; font-family: Arial, sans-serif;">
-            <tr>
-                <td style="font-weight: bold; padding: 8px 16px; float: left;">Requested On:</td>
-                <td style="padding: 8px 16px;">
-                {{ purchaseInfo?.BuyTimestamp ? (purchaseInfo.BuyTimestamp | date: 'short') : 'Not Available' }}
-                </td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; padding: 8px 16px; float: left;">Buyer Name:</td>
-                <td style="padding: 8px 16px;">
-                {{ (purchaseInfo?.FirstName || '') + ' ' + (purchaseInfo?.LastName || '') || 'Not Available' }}
-                </td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; padding: 8px 16px; float: left;">Address:</td>
-                <td style="padding: 8px 16px;">
-                {{ purchaseInfo?.Address || 'Not Available' }}
-                </td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; padding: 8px 16px; float: left;">Email:</td>
-                <td style="padding: 8px 16px;">
-                {{ purchaseInfo?.Email || 'Not Available' }}
-                </td>
-            </tr>
-        </table>
+            <!-- Buyer Info -->
+            <table style="margin: 0 auto; border-collapse: collapse; font-family: Arial, sans-serif;">
+                <tr>
+                    <td style="font-weight: bold; padding: 8px 16px; float: left;">Requested On:</td>
+                    <td style="padding: 8px 16px;">
+                        {{ purchaseInfo?.BuyTimestamp ? (purchaseInfo.BuyTimestamp | date: 'short') : 'Not Available' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 8px 16px; float: left;">Buyer Name:</td>
+                    <td style="padding: 8px 16px;">
+                        {{ (purchaseInfo?.FirstName || '') + ' ' + (purchaseInfo?.LastName || '') || 'Not Available' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 8px 16px; float: left;">Address:</td>
+                    <td style="padding: 8px 16px;">
+                        {{ purchaseInfo?.Address || 'Not Available' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 8px 16px; float: left;">Email:</td>
+                    <td style="padding: 8px 16px;">
+                        {{ purchaseInfo?.Email || 'Not Available' }}
+                    </td>
+                </tr>
+            </table>
 
 
-      <!-- Status Update -->
-      <div class="form-group">
-        <label for="status-select"><strong>Update delivery status</strong></label>
-        <select style="margin-top: 10px;" id="status-select" [(ngModel)]="selectedStatus">
-            <option value="" disabled selected hidden>Choose status...</option>
-            <option value="Requested for delivery">Requested for delivery</option>
-            <option value="In delivery">In delivery</option>
-        </select>
-      </div>
+            <!-- Status Update -->
+            <div class="form-group">
+                <label for="status-select"><strong>Update delivery status</strong></label>
+                <select style="margin-top: 10px;" id="status-select" [(ngModel)]="selectedStatus">
+                    <option value="" disabled selected hidden>Choose status...</option>
+                    <option value="Requested for delivery">Requested for delivery</option>
+                    <option value="In delivery">In delivery</option>
+                </select>
+            </div>
 
-      <div class="modal-actions">
-        <button style="margin-top: 10px;" class="confirm-button" (click)="updateDeliveryStatus()">Update Status</button>
-      </div>
+            <div class="modal-actions">
+                <button style="margin-top: 10px;" class="confirm-button" (click)="updateDeliveryStatus()">Update
+                    Status</button>
+            </div>
 
-      <hr />
+            <hr />
 
-      <!-- Mark as Sold -->
-      <label>If you received the payment for this product, you can mark it as Sold</label>
-      <div class="modal-actions">
-        <button style="margin-top: 10px;" class="confirm-button" (click)="markAsSold()">Mark as sold</button>
-      </div>
+            <!-- Mark as Sold -->
+            <label>If you received the payment for this product, you can mark it as Sold</label>
+            <div class="modal-actions">
+                <button style="margin-top: 10px;" class="confirm-button" (click)="markAsSold()">Mark as sold</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

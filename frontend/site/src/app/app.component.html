@@ -20,8 +20,26 @@
   <button class="beautiful-button">Search</button>
 </div>
 
+<div *ngIf="showNotifModal" id="app-modal-overlay" class="modal-overlay" (click)="closeModal($event)" style="display: flex;">
+    <div class="modal-content">
+        <span class="modal-close" (click)="closeModal($event)">&times;</span>
+
+        <div class="modal-body">
+            <h2>Product Status Changed</h2>
+            <div style="display: flex; justify-content: center; text-align: center; margin-top: 30px; margin-bottom: 25px;">
+                <span>One of your products' status has changed, check your user panel to take action.</span>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="confirm-button" (click)="closeModal($event)">I understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-toast></app-toast>
 <app-carousel *ngIf="showHomepageElements"></app-carousel>
-<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements"></app-products-page>
+<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements" [userId]="connectedUserId?.userId"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage" ></app-signin>
 <app-userpanel (clickedItemResponse)="captureProductResponse($event)" *ngIf="showUserPanelPage" [userId]="connectedUserId.userId"></app-userpanel>
 <app-product-view *ngIf="showProductView" [itemData]="receivedClickedItemData" [userId]="connectedUserId?.userId" (clickedItemResponse)="onReturn()"></app-product-view>

@@ -7,11 +7,17 @@ import { ProductsPageComponent } from "./pages/productsPage/productsPage.compone
 import { UserpanelComponent } from './pages/userpanel/userpanel.component';
 import { Product } from "./pages/product/product.component";
 import { ProductViewComponent } from "./pages/productView/product-view/product-view.component";
+import { ToastComponent } from "./services/toast/toast.component";
+
+interface Item {
+  VendorId: number;
+  Status: string;
+}
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent, ProductViewComponent],
+  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent, ProductViewComponent, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -28,6 +34,7 @@ export class AppComponent {
   showUserPanelBtn: boolean;
   showProductView: boolean;
   receivedClickedItemData: any = null;
+  showNotifModal: boolean;
 
   constructor(private appService: AppService) {
     this.showSignInBtn = true;
@@ -39,6 +46,7 @@ export class AppComponent {
     this.showUserPanelPage = false;
     this.showUserPanelBtn = false;
     this.showProductView = false;
+    this.showNotifModal = false;
   }
 
   onSignIn() {
@@ -68,7 +76,7 @@ export class AppComponent {
       this.showSignInBtn = true;
     }
 
-    if(this.isUserAuth === true) {
+    if (this.isUserAuth === true) {
       this.showUserPanelBtn = true;
     }
 
@@ -97,6 +105,43 @@ export class AppComponent {
     this.showHomepageElements = true;
     this.showUserPanelBtn = true;
     this.connectedUserId = $event;
+
+    let outerContext = this;
+    if (this.connectedUserId.IsVendor === 1) {
+      this.appService.getProductsForNotif(this.connectedUserId.userId).subscribe({
+        next(data: Item[]) {
+          const isVendorForSome = data.some(item => item.VendorId === outerContext.connectedUserId.userId && item.Status === "Requested for delivery");
+          if (isVendorForSome === true) {
+            outerContext.showNotifModal = true;
+          }
+        },
+        error(err) {
+          if (err && err['status'] === 500) {
+            console.log(err);
+          }
+        }
+      })
+    }
+  }
+
+  closeModal(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (
+      target.id === 'app-modal-overlay' ||
+      target.classList.contains('modal-close') ||
+      target.classList.contains('confirm-button') ||
+      target.closest('.modal-close-button')
+    ) {
+      this.hideModal();
+    }
+  }
+
+  hideModal(): void {
+    const modal = document.getElementById('app-modal-overlay');
+    if (modal) {
+      modal.style.display = 'none';
+      this.showNotifModal = false;
+    }
   }
 
   captureProductResponse($event: Object) {
@@ -109,39 +154,4 @@ export class AppComponent {
       this.showUserPanelBtn = true;
     }
   }
-
-  // testGetRequest() {
-  //   this.appService.getUsers().subscribe({
-  //     next(data: any) {
-  //       console.log(data);
-  //     },
-  //     error(err) {
-  //       // status number-ul trebuie sa coincida cu cel pe care il returnezi in BE pe error ca sa tratezi eroarea
-  //       if (err && err['status'] === 500) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   })
-  // }
-
-  // testPostRequest() {
-  //   let body = {
-  //     lastName: "Test",
-  //     firstName: "Test",
-  //     city: "Test",
-  //     adress: "Test"
-  //   }
-  //   this.appService.postUser(body).subscribe({
-  //     next(data) {
-  //       console.log(data.message);
-  //     },
-  //     error(err) {
-  //       // 400 adica 'Bad Request' punem de obicei cand datele de transmis sunt transmise incorect. Adica body-ul a avut structura proasta. De obicei validam asta in BE.
-  //       if (err && err['status'] === 400) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   })
-  // }
-
 }

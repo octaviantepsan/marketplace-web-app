@@ -119,20 +119,23 @@ export class UserpanelComponent {
     })
   }
 
-  getMyItems() {
-    let outerContext = this;
+  getMyItems() {  //another way to write, uses arrow-function to avoid needing to use outercontext
+    const isVendor = this.connectedUserData?.IsVendor;
 
-    this.appService.getProducts(this.userId).subscribe({
-      next(data: any) {
-        outerContext.myItems = data;
+    const request$ = isVendor ? this.appService.getProducts(this.userId) : this.appService.getProductsForBuyer(this.userId);
+
+    request$.subscribe({
+      next: (data: any) => {
+        this.myItems = data;
       },
-      error(err) {
-        if (err && err['status'] === 500) {
+      error: (err) => {
+        if (err?.status === 500) {
           console.log(err);
         }
       }
-    })
+    });
   }
+
 
   sendProductData($event: Object) {
     this.clickedItemResponse.emit($event);
