@@ -79,7 +79,8 @@ interface PagingOptions {
                 <div class="products">
                     <div class="justified">
                         <ng-container *ngFor="let product of products">
-                            <app-product *ngIf="product.assignedPage === pagination.currentPage" [item]="product" (viewResponse)="captureProductResponse($event)"></app-product>
+                            <app-product *ngIf="product.assignedPage === pagination.currentPage" [item]="product" (viewResponse)="captureProductResponse($event)" 
+                                (directBuyResponse)="captureDirectBuyResponse()" (sendUserToSign)="captureSendUserToSign()" [user]="userId"></app-product>
                         </ng-container>
                     </div>
                 </div>
@@ -157,7 +158,8 @@ interface PagingOptions {
 export class ProductsPageComponent {
     @Input() userId?: any = null;
     @Output() clickedItemResponse = new EventEmitter<Object>();
-    
+    @Output() redirectToSign = new EventEmitter<any>();
+
     filters: FilterOptions = {
         sortBy: '',
         minPrice: 0,
@@ -264,5 +266,13 @@ export class ProductsPageComponent {
     captureProductResponse($event: Object) {
         this.viewedProductData = $event;
         this.clickedItemResponse.emit(this.viewedProductData);
+    }
+
+    captureDirectBuyResponse() {
+        this.filterProducts();
+    }
+
+    captureSendUserToSign() {
+        this.redirectToSign.emit();
     }
 }

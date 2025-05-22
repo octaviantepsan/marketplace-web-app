@@ -84,11 +84,6 @@
                     </div>
 
                     <div class="data-container">
-                        <div style="font-weight: bold;">Password:</div>
-                        <div>{{ connectedUserData?.Passw || 'Not Available'}}</div>
-                    </div>
-
-                    <div class="data-container">
                         <div style="font-weight: bold;">Last Name:</div>
                         <div>{{ connectedUserData?.LastName || 'Not Available'}}</div>
                     </div>
@@ -110,8 +105,7 @@
 
                     <div class="data-container">
                         <div style="font-weight: bold;">Date Created:</div>
-                        <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'Not
-                            Available' }}</div>
+                        <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'NotAvailable' }}</div>
                     </div>
                 </div>
             </div>

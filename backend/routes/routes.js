@@ -152,7 +152,7 @@ router.get('/getProductsForBuyer', async (req, res) => {
 
     const query =
         `
-        SELECT I.ItemName, I.Category, I.Price, I.Availability, I.Status, I.BuyTimestamp 
+        SELECT I.ItemName, I.Category, I.Price, I.Availability, I.Status, I.BuyTimestamp, I.VendorId, I.Image, I.Description
         FROM Items AS I
         INNER JOIN Transactions as T ON T.ItemId = I.ItemId
         WHERE T.BuyerId = ?
@@ -233,8 +233,8 @@ router.post('/createTransaction', async (req, res) => {
     res.set(allowCORS, frontendURL);
 
     if (req.body.vendorId != req.body.buyerId) {
-        const query = `INSERT INTO Transactions (ItemId, VendorId, BuyerId)
-                VALUES (?, ?, ?)`;
+        const query = `INSERT INTO Transactions (ItemId, VendorId, BuyerId, Deadline)
+                VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))`;
         const values = [req.body.itemId, req.body.vendorId, req.body.buyerId];
 
         db.query(query, values, (err) => {

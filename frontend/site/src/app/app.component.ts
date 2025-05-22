@@ -37,7 +37,7 @@ export class AppComponent {
   receivedClickedItemData: any = null;
   showNotifModal: boolean;
 
-  constructor(private appService: AppService, private toastService: ToastService) {
+  constructor(private appService: AppService, public toastService: ToastService) {
     this.showSignInBtn = true;
     this.showSignOutBtn = false;
     this.showSignInPage = false;
@@ -68,6 +68,7 @@ export class AppComponent {
     this.showUserPanelPage = false;
     this.showUserPanelBtn = false;
     this.showProductView = false;
+    this.connectedUserId = null;
   }
 
   onReturn() {

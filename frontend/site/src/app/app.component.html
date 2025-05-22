@@ -39,7 +39,7 @@
 
 <app-toast></app-toast>
 <app-carousel *ngIf="showHomepageElements"></app-carousel>
-<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements" [userId]="connectedUserId?.userId"></app-products-page>
+<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements" [userId]="connectedUserId?.userId" (redirectToSign)="onSignIn(); toastService.show('You must be signed in to proceed', 'warning')"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage" ></app-signin>
 <app-userpanel (clickedItemResponse)="captureProductResponse($event)" *ngIf="showUserPanelPage" [userId]="connectedUserId.userId"></app-userpanel>
-<app-product-view *ngIf="showProductView" [itemData]="receivedClickedItemData" [userId]="connectedUserId?.userId" (clickedItemResponse)="onReturn()"></app-product-view>
+<app-product-view *ngIf="showProductView" [itemData]="receivedClickedItemData" [userId]="connectedUserId?.userId" (clickedItemResponse)="onReturn()" (redirectToSign)="onSignIn(); toastService.show('You must be signed in to proceed', 'warning')"></app-product-view>

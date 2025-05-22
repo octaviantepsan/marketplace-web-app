@@ -11,10 +11,10 @@ import { ToastService } from '../../../services/toast.service';
 })
 export class ProductViewComponent {
   @Input() itemData: any;
-  vendorName: string = '';
   @Input() userId?: any = null;
-  
+  @Output() redirectToSign = new EventEmitter<any>();
   @Output() clickedItemResponse = new EventEmitter<any>();
+  vendorName: string = '';
 
   constructor(private appService: AppService, private toastService: ToastService) { }
 
@@ -38,7 +38,7 @@ export class ProductViewComponent {
       }
     }
     else {
-      alert("You must be signed in to procced");
+      this.redirectToSign.emit();
     }
   }
 
@@ -72,7 +72,6 @@ export class ProductViewComponent {
 
   getVendorName() {
     let outerContext = this;
-
     this.appService.getVendorName(this.itemData.VendorId).subscribe({
       next(data: any) {
         outerContext.vendorName = data.LastName + " " + data.FirstName;
@@ -95,7 +94,7 @@ export class ProductViewComponent {
     let outerContext = this;
 
     this.appService.updateItemStatus(bodyStatus).subscribe({
-      next(data: any) {},
+      next(data: any) { },
       error(err) {
         if (err && err['status'] === 500) {
           outerContext.toastService.show('Internal server error', 'error');
@@ -114,7 +113,7 @@ export class ProductViewComponent {
     let outerContext = this;
 
     this.appService.createTransaction(bodyTransaction).subscribe({
-      next(data: any) {},
+      next(data: any) { },
       error(err) {
         if (err && err['status'] === 500) {
           outerContext.toastService.show('Internal server error', 'error');

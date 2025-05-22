@@ -275,3 +275,8 @@ body {
 .confirm-button:hover {
     background-color: #355262;
 }
+
+.actions.single-button {
+    justify-content: center;
+    /* When only one button, center it */
+}
