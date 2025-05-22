@@ -30,26 +30,27 @@ export class SigninComponent {
     $event.preventDefault();
 
     if (registerForm.valid === false) {
-      this.showRegisterNotification(false);
+      this.toastService.show('Data is incorrect', 'error');
     }
     else {
       let outerContext = this;
 
       this.appService.registerUser(body).subscribe({
         next(data) {
-          console.log(data.message);
-
           let authResponseData = {
             isSucces: true,
-            userId: data.userId
+            userId: data.userId,
+            isVendor: data.isVendor
           };
 
-          alert("ok");
+          outerContext.toastService.show('Signed up succesfully', 'success');
           outerContext.authResponse.emit(authResponseData);
         },
         error(err) {
-          if (err) {
-            outerContext.showRegisterNotification(false);
+          if (err?.status === 500) {
+            outerContext.toastService.show('Email already in use', 'warning');
+          } else if (err?.status === 400) {
+            outerContext.toastService.show('Data is incorrect', 'error');
           }
         }
       })
@@ -63,7 +64,7 @@ export class SigninComponent {
     $event.preventDefault();
 
     if (loginForm.valid === false) {
-      this.showRegisterNotification(false);
+      this.toastService.show('Data is incorrect', 'error');
     }
     else {
       let outerContext = this;
@@ -72,7 +73,8 @@ export class SigninComponent {
         next(data) {
           let authResponseData = {
             isSucces: true,
-            userId: data.userId
+            userId: data.userId,
+            isVendor: data.isVendor
           };
 
           outerContext.toastService.show('Signed in succesfully', 'success');
@@ -80,27 +82,10 @@ export class SigninComponent {
         },
         error(err) {
           if (err) {
-            outerContext.showRegisterNotification(false);
+            outerContext.toastService.show('User does not exist', 'warning');
           }
         }
       })
-    }
-  }
-
-  showRegisterNotification(type: boolean) {
-    if (type === false) {
-      this.showRegisterWarningNotif = true;
-
-      setTimeout(() => {
-        this.showRegisterWarningNotif = false;
-      }, 3000);
-      return
-    }
-    else {
-      this.showRegisterSuccesNotif = true;
-      setTimeout(() => {
-        this.showRegisterSuccesNotif = false;
-      }, 4000);
     }
   }
 }

@@ -26,48 +26,8 @@ const utils = require('../utils/utils');
 
 module.exports = router;
 
-// exemple ... 
-
-// Get method
-router.get('/getUsers', async (req, res) => {
-    res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getUsers'] ... ");
-    try {
-        const query = `SELECT * FROM users`;
-        db.query(query, (err, results) => {
-            if (err) {
-                console.error(err.message);
-            }
-            res.json(results);
-        });
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Post method
-router.post('/postUser', async (req, res) => {
-    res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/postUser'] ... ");
-    try {
-        const query = `INSERT INTO Users (LastName, FirstName, City, Address)
-                   VALUES ('${req.body.lastName}', '${req.body.firstName}', '${req.body.city}', '${req.body.adress}')`;
-        db.query(query, (err) => {
-            if (err) {
-                console.error(err.message);
-            }
-            res.status(200).json({ message: "post ok" });
-        });
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-
 router.post('/registerUser', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/registerUser'] ... ");
 
     if (utils.isUserDataValid(req.body.email, req.body.fname, req.body.lname, req.body.city) === true) {
         const query = `INSERT INTO Users (Email, Passw, LastName, FirstName, City, Address)
@@ -76,33 +36,31 @@ router.post('/registerUser', async (req, res) => {
 
         db.query(query, values, (err, results) => {
             if (err) {
-                console.error(err.message);
-                res.status(500).json({ message: err.message });
+                res.status(500).json({});
+                return;
             }
             newUserId = results.insertId
-            res.status(200).json({ userId: newUserId });
+            res.status(200).json({ userId: newUserId, isVendor: req.body.vendor });
         });
     }
     else {
-        res.status(400).json({});
+        res.status(400).json({ message: "Data is incorrect" });
     }
 });
 
 router.post('/loginUser', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/loginUser'] ... ");
 
     const query = `SELECT * FROM Users WHERE Email = ? AND Passw = ?`;
     const values = [req.body.email, req.body.passw];
 
     db.query(query, values, (err, results) => {
         if (err) {
-            console.error(err.message);
             res.status(500).json({ message: err.message });
         }
 
         if (results.length > 0) {
-            res.status(200).json({ userId: results[0].UserId });
+            res.status(200).json({ userId: results[0].UserId, isVendor: results[0].IsVendor });
         }
         else {
             res.status(400).json({ message: "User not found" });
@@ -112,7 +70,6 @@ router.post('/loginUser', async (req, res) => {
 
 router.post('/addItem', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/addItem'] ... ");
 
     if (utils.processItemData(req.body.iname, req.body.categ, req.body.price) == true) {
         try {
@@ -132,6 +89,7 @@ router.post('/addItem', async (req, res) => {
                     if (err) {
                         console.error(err.message);
                         res.status(500).json({ message: err.message });
+                        return;
                     }
                     res.status(200).json({ message: "added item succesfully" });
                 });
@@ -148,7 +106,6 @@ router.post('/addItem', async (req, res) => {
 
 router.get('/getUserData', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getUserData'] ... ");
 
     const query = `SELECT * FROM Users WHERE UserId = ?`;
     const values = [req.query.userId];
@@ -157,6 +114,7 @@ router.get('/getUserData', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
 
         if (results.length > 0) {
@@ -170,7 +128,6 @@ router.get('/getUserData', async (req, res) => {
 
 router.get('/getProducts', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getProducts'] ... ");
 
     const isQuery = req.query && req.query.userId;
 
@@ -181,34 +138,32 @@ router.get('/getProducts', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
-        }
-
-        if (results.length > 0) {
-            res.status(200).json(results);
+            return;
         }
         else {
-            res.status(400).json({ message: "Items not found" });
+            res.status(200).json(results);
         }
+
     });
 });
 
 router.get('/getProductsForBuyer', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getProductsForBuyer'] ... ");
 
     const query =
-    `
+        `
         SELECT I.ItemName, I.Category, I.Price, I.Availability, I.Status, I.BuyTimestamp 
         FROM Items AS I
         INNER JOIN Transactions as T ON T.ItemId = I.ItemId
         WHERE T.BuyerId = ?
     `;
-    const values =[req.query.userId];
+    const values = [req.query.userId];
 
     db.query(query, values, (err, results) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
 
         if (results.length > 0) {
@@ -222,7 +177,6 @@ router.get('/getProductsForBuyer', async (req, res) => {
 
 router.get('/getVendorName', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getVendorName'] ... ");
 
     const query = `SELECT LastName, FirstName FROM Users WHERE UserId = ?`;
     const values = [req.query.vendorId];
@@ -231,6 +185,7 @@ router.get('/getVendorName', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
 
         if (results.length > 0) {
@@ -244,7 +199,6 @@ router.get('/getVendorName', async (req, res) => {
 
 router.post('/updateItemStatus', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/updateItemStatus'] ... ");
 
     const query = `UPDATE Items SET Status = ?, Availability = ?, BuyTimestamp = NOW() WHERE ItemId = ?`;
     const values = [req.body.status, req.body.availability, req.body.itemId];
@@ -253,6 +207,7 @@ router.post('/updateItemStatus', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
         res.status(200).json({});
     });
@@ -260,7 +215,6 @@ router.post('/updateItemStatus', async (req, res) => {
 
 router.post('/updateDeliveryStatus', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/updateDeliveryStatus'] ... ");
 
     const query = `UPDATE Items SET Status = ? WHERE ItemId = ?`;
     const values = [req.body.status, req.body.itemId];
@@ -269,6 +223,7 @@ router.post('/updateDeliveryStatus', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
         res.status(200).json({});
     });
@@ -276,7 +231,6 @@ router.post('/updateDeliveryStatus', async (req, res) => {
 
 router.post('/createTransaction', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/createTransaction'] ... ");
 
     if (req.body.vendorId != req.body.buyerId) {
         const query = `INSERT INTO Transactions (ItemId, VendorId, BuyerId)
@@ -287,6 +241,7 @@ router.post('/createTransaction', async (req, res) => {
             if (err) {
                 console.error(err.message);
                 res.status(500).json({ message: err.message });
+                return;
             }
             res.status(200).json({});
         });
@@ -298,10 +253,9 @@ router.post('/createTransaction', async (req, res) => {
 
 router.post('/getPurchaseInfo', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received POST request to ['/getPurchaseInfo'] ... ");
 
-    const query = 
-    `
+    const query =
+        `
         SELECT U.LastName, U.FirstName, U.Address, U.Email, I.BuyTimestamp
         FROM (Transactions AS T
         INNER JOIN Items AS I ON T.ItemId = I.ItemId)
@@ -314,6 +268,7 @@ router.post('/getPurchaseInfo', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
+            return;
         }
         res.status(200).json(results[0]);
     });
@@ -321,7 +276,6 @@ router.post('/getPurchaseInfo', async (req, res) => {
 
 router.get('/getProductsForNotif', async (req, res) => {
     res.set(allowCORS, frontendURL);
-    console.log("Received GET request to ['/getProductsForNotif'] ... ");
 
     const isQuery = req.query && req.query.userId;  // check if a query was sent
 
@@ -332,13 +286,10 @@ router.get('/getProductsForNotif', async (req, res) => {
         if (err) {
             console.error(err.message);
             res.status(500).json({ message: err.message });
-        }
-
-        if (results.length > 0) {
-            res.status(200).json(results);
+            return;
         }
         else {
-            res.status(400).json({ message: "Items not found" });
+            res.status(200).json(results);
         }
     });
 });

@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../services/app.service';
 import { Product } from '../product/product.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-userpanel',
@@ -27,7 +28,7 @@ export class UserpanelComponent {
 
   @Output() clickedItemResponse = new EventEmitter<Object>();
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService, private toastService: ToastService) {
     this.showMyData = true;
     this.showAddItem = false;
     this.showMyitems = false;
@@ -78,29 +79,27 @@ export class UserpanelComponent {
   }
 
   addItem($event: any, itemForm: NgForm) {
-    let body = itemForm.form.value;  //body devine un Object avand ca atribute input-urile care apartin de registerForm -> fname | lname | adress | city
+    let body = itemForm.form.value;
     body["userId"] = this.userId;
     body["image"] = this.newProductImg;
 
     $event.preventDefault();
 
     if (itemForm.valid === false) {
-      console.log("item added unsuccesfully");
+      this.toastService.show('Data is incorrect', 'error');
     }
     else {
       this.appService.addItem(body).subscribe({
-        next(data) {
-          console.log(data.message);
-          alert("ok");
+        next: (data) => {
+          this.toastService.show('Item added succesfully', 'success');
         },
-        error(err) {
+        error: (err) => {
           if (err) {
-            console.log("item added unsuccesfully");
+            this.toastService.show('Data is incorrect', 'error');
           }
         }
       })
     }
-
     itemForm.resetForm();
   }
 
@@ -113,7 +112,7 @@ export class UserpanelComponent {
       },
       error(err) {
         if (err && err['status'] === 500) {
-          console.log(err);
+          outerContext.toastService.show('Internal server error', 'error');
         }
       }
     })
@@ -130,7 +129,7 @@ export class UserpanelComponent {
       },
       error: (err) => {
         if (err?.status === 500) {
-          console.log(err);
+          this.toastService.show('Internal server error', 'error');
         }
       }
     });
@@ -149,7 +148,7 @@ export class UserpanelComponent {
       }
     }
     else {
-      alert("You must be signed in to procced");
+      this.toastService.show("You must be signed in to procced", 'warning');
     }
   }
 
@@ -182,17 +181,16 @@ export class UserpanelComponent {
     }
 
     this.appService.updateDeliveryStatus(body).subscribe({
-      next(data: any) {
-        console.log(data);
+      next: (data: any) => {
+        this.getMyItems();
+        this.hideModal();
       },
-      error(err) {
+      error: (err) => {
         if (err && err['status'] === 500) {
-          console.log(err);
+          this.toastService.show("Update failed", 'warning');
         }
       }
     });
-    this.getMyItems();
-    this.hideModal();
   }
 
   getPurchaseInfo() {
@@ -205,13 +203,11 @@ export class UserpanelComponent {
 
     this.appService.getPurchaseInfo(body).subscribe({
       next(data: any) {
-        console.log(data);
-
         outerContext.purchaseInfo = data;
       },
       error(err) {
         if (err && err['status'] === 500) {
-          console.log(err);
+          outerContext.toastService.show("Item does not exist", 'warning');
         }
       }
     })
@@ -224,16 +220,15 @@ export class UserpanelComponent {
     };
 
     this.appService.updateDeliveryStatus(body).subscribe({
-      next(data: any) {
-        console.log(data);
+      next: (data: any) => {
+        this.getMyItems();
+        this.hideModal();
       },
-      error(err) {
+      error: (err) => {
         if (err && err['status'] === 500) {
-          console.log(err);
+          this.toastService.show("Update failed", 'warning');
         }
       }
     });
-    this.getMyItems();
-    this.hideModal();
   }
 }

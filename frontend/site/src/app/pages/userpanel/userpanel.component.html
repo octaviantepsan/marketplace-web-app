@@ -18,40 +18,58 @@
         <div style="flex-grow: 1; background-color: #ecf0f1; padding: 30px; overflow-y: auto;">
             <!-- AddItem -->
             <div class="add-item-body" *ngIf="showAddItem">
-                <div class="flex-body" style="padding-top: 30px;">
-                    <div class="form-wrapper" style="display: block; width: 100%;">
-                        <div style="margin-top: 20px; text-align: center; font-size: 24px;">Add Item</div>
-                        <div style="margin-top: 30px; padding: 0 10px 0 10px;">
-                            <form #itemForm="ngForm" style="text-align: center;">
-                                <label for="iname">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="text" id="iname" name="iname" required><br><br>
+                <div class="flex-body">
+                    <div class="form-wrapper">
+                        <h2 class="form-title">Add Item</h2>
+                        <form #itemForm="ngForm" class="item-form" (ngSubmit)="addItem($event, itemForm)" novalidate>
 
-                                <label for="categ">Category:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="text" id="categ" name="categ" required><br><br>
+                            <div class="form-group">
+                                <label for="iname">Name</label>
+                                <input ngModel type="text" id="iname" name="iname" required
+                                    placeholder="Enter item name" />
+                            </div>
 
-                                <label for="desc">Description:&nbsp;&nbsp;&nbsp;</label><br>
-                                <textarea ngModel id="desc" name="desc" rows="4" cols="50" required
-                                    placeholder="Enter item description here"></textarea><br><br>
+                            <div class="form-group">
+                                <label for="categ">Category</label>
+                                <select ngModel id="categ" name="categ" required>
+                                    <option value="" disabled selected>Select a category</option>
+                                    <option value="electronics">Electronics</option>
+                                    <option value="for_house">For House</option>
+                                    <option value="books">Books</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="clothing">Clothing</option>
+                                </select>
+                            </div>
 
-                                <label
-                                    for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                <input ngModel type="text" id="price" name="price" required><br><br>
+                            <div class="form-group">
+                                <label for="desc">Description</label>
+                                <textarea ngModel id="desc" name="desc" rows="4"
+                                    placeholder="Enter item description here"></textarea>
+                            </div>
 
-                                <div class="product-img-container">
-                                    <label for="imageUrl">Upload Image</label>
-                                    <input type="file" accept="image/*" id="imageUrl"
-                                        (change)="uploadProductImage(imageUrl)" #imageUrl
-                                        placeholder="Click here to upload image (supported formats include: JPG, JPEG, PNG)">
-                                    <img class="product-img" id="productImgDisplay" src="../../../assets/box.png"
-                                        width="300" height="300">
-                                </div>
-                                <button class="beautiful-button" style="margin-bottom: 10px; margin-top: 10px;"
-                                    (click)="addItem($event, itemForm)">Add</button>
-                            </form>
-                        </div>
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input ngModel type="text" id="price" name="price" required placeholder="Enter price" />
+                            </div>
+
+                            <div class="form-group image-upload-group">
+                                <label for="imageUrl">Upload Image</label>
+                                <input type="file" accept="image/*" id="imageUrl"
+                                    (change)="uploadProductImage(imageUrl)" #imageUrl
+                                    placeholder="Click here to upload image (JPG, JPEG, PNG)" />
+                                <img class="product-img" id="productImgDisplay" src="../../../assets/box.png"
+                                    alt="Product preview" width="300" height="300" />
+                            </div>
+
+                            <button class="beautiful-button" type="submit"
+                                [disabled]="itemForm.invalid || !imageUrl.files?.length">
+                                Add
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
+
 
             <!-- MyData -->
             <div class="data-wrapper" *ngIf="showMyData">
@@ -92,7 +110,8 @@
 
                     <div class="data-container">
                         <div style="font-weight: bold;">Date Created:</div>
-                        <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'Not Available' }}</div>
+                        <div>{{ connectedUserData?.DateCreated ? (connectedUserData.DateCreated | date: 'short') : 'Not
+                            Available' }}</div>
                     </div>
                 </div>
             </div>

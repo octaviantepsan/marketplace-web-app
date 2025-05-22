@@ -8,6 +8,7 @@ import { UserpanelComponent } from './pages/userpanel/userpanel.component';
 import { Product } from "./pages/product/product.component";
 import { ProductViewComponent } from "./pages/productView/product-view/product-view.component";
 import { ToastComponent } from "./services/toast/toast.component";
+import { ToastService } from './services/toast.service';
 
 interface Item {
   VendorId: number;
@@ -36,7 +37,7 @@ export class AppComponent {
   receivedClickedItemData: any = null;
   showNotifModal: boolean;
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService, private toastService: ToastService) {
     this.showSignInBtn = true;
     this.showSignOutBtn = false;
     this.showSignInPage = false;
@@ -107,17 +108,19 @@ export class AppComponent {
     this.connectedUserId = $event;
 
     let outerContext = this;
-    if (this.connectedUserId.IsVendor === 1) {
+    if (this.connectedUserId.isVendor === 1) {
       this.appService.getProductsForNotif(this.connectedUserId.userId).subscribe({
-        next(data: Item[]) {
-          const isVendorForSome = data.some(item => item.VendorId === outerContext.connectedUserId.userId && item.Status === "Requested for delivery");
-          if (isVendorForSome === true) {
-            outerContext.showNotifModal = true;
+        next: (data: Item[] | null | undefined) => {
+          if (Array.isArray(data)) {
+            const isVendorForSome = data.some(item => item.VendorId === outerContext.connectedUserId.userId && item.Status === "Requested for delivery");
+            if (isVendorForSome === true) {
+              outerContext.showNotifModal = true;
+            }
           }
         },
-        error(err) {
+        error: (err) => {
           if (err && err['status'] === 500) {
-            console.log(err);
+            this.toastService.show('Internal server error', 'error');
           }
         }
       })

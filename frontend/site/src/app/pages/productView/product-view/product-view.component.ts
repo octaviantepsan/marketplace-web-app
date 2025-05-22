@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppService } from '../../../services/app.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-product-view',
@@ -15,7 +16,7 @@ export class ProductViewComponent {
   
   @Output() clickedItemResponse = new EventEmitter<any>();
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.getVendorName();
@@ -78,7 +79,7 @@ export class ProductViewComponent {
       },
       error(err) {
         if (err && err['status'] === 500) {
-          console.log(err);
+          outerContext.toastService.show('Internal server error', 'error');
         }
       }
     })
@@ -91,13 +92,13 @@ export class ProductViewComponent {
       availability: "sold_out"
     }
 
+    let outerContext = this;
+
     this.appService.updateItemStatus(bodyStatus).subscribe({
-      next(data: any) {
-        console.log(data);
-      },
+      next(data: any) {},
       error(err) {
         if (err && err['status'] === 500) {
-          console.log(err);
+          outerContext.toastService.show('Internal server error', 'error');
         }
       }
     })
@@ -110,12 +111,13 @@ export class ProductViewComponent {
       itemId: this.itemData.ItemId
     }
 
+    let outerContext = this;
+
     this.appService.createTransaction(bodyTransaction).subscribe({
-      next(data: any) {
-      },
+      next(data: any) {},
       error(err) {
         if (err && err['status'] === 500) {
-          console.log(err);
+          outerContext.toastService.show('Internal server error', 'error');
         }
       }
     })

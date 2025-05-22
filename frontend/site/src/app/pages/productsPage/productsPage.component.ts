@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Product } from "../product/product.component";
 import { AppService } from '../../services/app.service';
 import { TypeProduct } from '../../interfaces/product.interface';
+import { ToastService } from '../../services/toast.service';
 
 interface FilterOptions {
     sortBy: string;
@@ -173,7 +174,7 @@ export class ProductsPageComponent {
     };
     viewedProductData: any = null;
 
-    constructor(private appService: AppService) { }
+    constructor(private appService: AppService, private toastService: ToastService) { }
 
     ngOnInit(): void {
         this.filterProducts();
@@ -208,7 +209,7 @@ export class ProductsPageComponent {
             },
             error(err) {
                 if (err && err['status'] === 500) {
-                    console.log(err);
+                    outerContext.toastService.show('Internal server error', 'error');
                 }
             }
         });
