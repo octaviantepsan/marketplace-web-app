@@ -156,9 +156,20 @@ interface PagingOptions {
   `]
 })
 export class ProductsPageComponent {
-    @Input() userId?: any = null;
     @Output() clickedItemResponse = new EventEmitter<Object>();
     @Output() redirectToSign = new EventEmitter<any>();
+    @Input() userId?: any = null;
+    @Input()
+    set searchQuery(value: string) {
+        this._searchQuery = value;
+        if (value !== null && value !== undefined) {
+            this.filterProductsBySearch(value); // Trigger filtering here
+        }
+    };
+
+    get searchQuery(): string {
+        return this._searchQuery;
+    }
 
     filters: FilterOptions = {
         sortBy: '',
@@ -175,6 +186,7 @@ export class ProductsPageComponent {
         currentPage: 1
     };
     viewedProductData: any = null;
+    _searchQuery: string = '';
 
     constructor(private appService: AppService, private toastService: ToastService) { }
 
@@ -194,7 +206,7 @@ export class ProductsPageComponent {
         this.filterProducts();
     }
 
-    filterProducts() {
+    filterProducts(): void {
         let outerContext = this;
         // fetch products
         this.appService.getProducts().subscribe({
@@ -216,6 +228,35 @@ export class ProductsPageComponent {
             }
         });
     }
+
+    filterProductsBySearch(searchTerm: string): void {
+        const normalized = searchTerm.trim().toLowerCase();
+
+        this.appService.getProducts().subscribe({
+            next: (data: any[]) => {
+                this.products = data.filter(product => {
+                    return product.ItemName.toLowerCase().includes(normalized) &&
+                        product.Price >= this.filters['minPrice'] &&
+                        product.Price <= this.filters['maxPrice'] &&
+                        product.Availability.toLowerCase() === this.filters['availability'].toLowerCase() &&
+                        (this.filters['category'].toLowerCase() === 'all' ||
+                            product.Category.toLowerCase() === this.filters['category'].toLowerCase());
+                }).sort((a, b) => this.compareFn(a, b));
+
+                this.paginateProducts();
+            },
+            error: (err) => {
+                if (err && err['status'] === 500) {
+                    this.toastService.show('Internal server error', 'error');
+                }
+            }
+        });
+
+        if (searchTerm = '') {
+            this.filterProducts();
+        }
+    }
+
 
     compareFn(a: any, b: any) {
         switch (this.filters.sortBy) {

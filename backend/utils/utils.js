@@ -12,7 +12,7 @@ function isUserDataValid(email, firstName, lastName, city) {
 }
 
 function processItemData(itemName, Category, price) {
-    let letterOnlyCheck = /^[a-zA-Z\s]+$/;
+    let letterOnlyCheck = /^[a-zA-Z_\s]+$/;
     let itemNameCheck = /^.*$/;
     let priceValueCheck = /^[1-9][0-9]*$/;
 

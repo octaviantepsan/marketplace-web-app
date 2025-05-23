@@ -9,6 +9,7 @@ import { Product } from "./pages/product/product.component";
 import { ProductViewComponent } from "./pages/productView/product-view/product-view.component";
 import { ToastComponent } from "./services/toast/toast.component";
 import { ToastService } from './services/toast.service';
+import { FormsModule } from '@angular/forms';
 
 interface Item {
   VendorId: number;
@@ -18,11 +19,12 @@ interface Item {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent, ProductViewComponent, ToastComponent],
+  imports: [CommonModule, SigninComponent, CarouselComponent, ProductsPageComponent, UserpanelComponent, ProductViewComponent, ToastComponent, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
   title = 'site';
   showSignInBtn: boolean;
   showSignOutBtn: boolean;
@@ -36,6 +38,8 @@ export class AppComponent {
   showProductView: boolean;
   receivedClickedItemData: any = null;
   showNotifModal: boolean;
+  searchedItemByQuery: string = '';
+  queryToSend: string = '';
 
   constructor(private appService: AppService, public toastService: ToastService) {
     this.showSignInBtn = true;
@@ -157,5 +161,9 @@ export class AppComponent {
     if (this.isUserAuth === true) {
       this.showUserPanelBtn = true;
     }
+  }
+
+  search(): void {
+    this.queryToSend = this.searchedItemByQuery;
   }
 }

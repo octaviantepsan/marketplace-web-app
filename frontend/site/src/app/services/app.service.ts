@@ -111,10 +111,19 @@ export class AppService {
 
     return this.http.get(SERVER_API_URL + "/getProductsForNotif", options);
   }
-  
+
   getProductsForBuyer(queryParam?: string): Observable<any> {
     const options = queryParam ? { params: { userId: queryParam } } : {};
 
     return this.http.get(SERVER_API_URL + "/getProductsForBuyer", options);
   }
+
+  getSearchedProducts(searchQuery?: string): Observable<any> {
+    const options = searchQuery
+      ? { params: { search: searchQuery } }
+      : {};
+
+    return this.http.get(SERVER_API_URL + "/getSearchedProducts", options);
+  }
+
 }

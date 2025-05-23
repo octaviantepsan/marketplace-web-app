@@ -16,8 +16,8 @@
 </nav>
 
 <div class="global-search">
-  <input type="text" class="search-input" placeholder="Search across all products...">
-  <button class="beautiful-button">Search</button>
+  <input type="text" class="search-input" placeholder="Search across all products..." [(ngModel)]="searchedItemByQuery" name="search">
+  <button type="button" class="beautiful-button" (click)="search()">Search</button>
 </div>
 
 <div *ngIf="showNotifModal" id="app-modal-overlay" class="modal-overlay" (click)="closeModal($event)" style="display: flex;">
@@ -39,7 +39,7 @@
 
 <app-toast></app-toast>
 <app-carousel *ngIf="showHomepageElements"></app-carousel>
-<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements" [userId]="connectedUserId?.userId" (redirectToSign)="onSignIn(); toastService.show('You must be signed in to proceed', 'warning')"></app-products-page>
+<app-products-page (clickedItemResponse)="captureProductResponse($event)" *ngIf="showHomepageElements" [userId]="connectedUserId?.userId" (redirectToSign)="onSignIn(); toastService.show('You must be signed in to proceed', 'warning')" [searchQuery]="queryToSend"></app-products-page>
 <app-signin (authResponse)="captureAuthResponse($event)" *ngIf="showSignInPage" ></app-signin>
 <app-userpanel (clickedItemResponse)="captureProductResponse($event)" *ngIf="showUserPanelPage" [userId]="connectedUserId.userId"></app-userpanel>
 <app-product-view *ngIf="showProductView" [itemData]="receivedClickedItemData" [userId]="connectedUserId?.userId" (clickedItemResponse)="onReturn()" (redirectToSign)="onSignIn(); toastService.show('You must be signed in to proceed', 'warning')"></app-product-view>

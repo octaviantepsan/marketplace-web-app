@@ -71,7 +71,7 @@ router.post('/loginUser', async (req, res) => {
 router.post('/addItem', async (req, res) => {
     res.set(allowCORS, frontendURL);
 
-    if (utils.processItemData(req.body.iname, req.body.categ, req.body.price) == true) {
+    if (true) {
         try {
             const upload = cloudinary.uploader.upload(
                 req.body.image,
@@ -146,6 +146,35 @@ router.get('/getProducts', async (req, res) => {
 
     });
 });
+
+router.get('/getSearchedProducts', async (req, res) => {
+    res.set(allowCORS, frontendURL);
+
+    const { search } = req.query;
+
+    let query = `SELECT * FROM Items`;
+    const values = [];
+
+    if (search) {
+        const searchWords = search.trim().toLowerCase().split(/\s+/);
+
+        const likeClauses = searchWords.map(word => {
+            values.push(`%${word}%`);
+            return `LOWER(ItemName) LIKE ?`;
+        });
+
+        query += ` WHERE ` + likeClauses.join(' AND ');
+    }
+
+    db.query(query, values, (err, results) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: err.message });
+        }
+        res.status(200).json(results);
+    });
+});
+
 
 router.get('/getProductsForBuyer', async (req, res) => {
     res.set(allowCORS, frontendURL);
